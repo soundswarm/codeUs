@@ -21,9 +21,9 @@ var request = require('request');
 // server.listen(port, ip);
 
 var githubOAuth = require('github-oauth')({
-  githubClient: process.env['16b3fb882ea54cac1939'],
-  githubSecret: process.env['4da3e94f68a98158647e5e145426f975a026d6b3'],
-  baseURL: 'http://localhost',
+  githubClient: '16b3fb882ea54cac1939',
+  githubSecret: '4da3e94f68a98158647e5e145426f975a026d6b3',
+  baseURL: 'http://localhost:8000',
   loginURI: '/signin',
   callbackURI: '/success',
   scope: '' // optional, default scope is set to user
@@ -40,8 +40,9 @@ githubOAuth.on('token', function(token, serverResponse) {
 
 require('http').createServer(function(req, res) {
   console.log("creating server");
-  if (req.url.match()) console.log("HELLO");
-  if (req.url.match(githubOAuth.loginURI)) return githubOAuth.login(req, res);
-  if (req.url.match(githubOAuth.baseURL+githubOAuth.callbackURI)) return githubOAuth.callback(req, res);
+  console.log(req.url)
+  if (req.url.match(githubOAuth.baseURL)) console.log("HELLO");
+  if (req.url.match(/signin/)) return githubOAuth.login(req, res);
+  if (req.url.match(/success/)) return githubOAuth.callback(req, res);
 }).listen(8000)
 
