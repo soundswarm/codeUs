@@ -13,13 +13,12 @@ angular.module('GitUs.factories', [])
   // then localStorage and you'll see your token from the server
   var signin = function (user) {
     return $http({
-      method: 'POST',
-      url: '/haiku/users/signin',
-      data: user
-    })
-    .then(function (resp) {
-      return resp.data.token;
+      method: 'GET',
+      url: '/oauth/signin'
     });
+    // .then(function (resp) {
+    //   return resp.data.token;
+    // });
   };
 
   var signup = function (user) {

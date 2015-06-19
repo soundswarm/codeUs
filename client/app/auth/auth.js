@@ -5,11 +5,11 @@ angular.module('GitUs.auth', [])
 
   $scope.signin = function() {
     Auth.signin($scope.user)
-    .then(function(token) {
-      $window.localStorage.setItem('com.shortly', token);
+    .then(function() {
+      // $window.localStorage.setItem('com.shortly', token);
       console.log("signed in!!");
 
-      $location.path('/')
+      // $location.path('/')
     })
     .catch(function(error) {
       console.error(error);
