@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app='GitUs'>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHUB FORUM</title>
+    <link rel="stylesheet" type="text/css" href="app/styles/styles.css" />
+
+  </head>
+  <body>
+    <header>
+      <div id="banner" role="banner">
+      GITHUBFORUMS
+        <nav class="menu">
+            <!-- if not signed in show here sign up/signin  -->
+            <div ui-view="signIn"></div>
+
+        </nav>
+      </div>
+
+    </header>
+
+  <!--   <div id="content">
+      <div ui-view="new"></div>
+      <div ui-view="gallery"></div>
+    </div> -->
+    <!-- the ng-view directive is where our templates will be loaded into when naviagted to -->
+    <!-- <div ng-view></div> -->
+    <footer id="main-footer">
+        <p>
+            GitHubForum. Copyright &copy; 2015 - 2020.
+        </p>
+       <!--  <div class="social-bar">
+          <a href="./facebook" title="Facebook">
+            <img src="./images/icons/facebook.png" alt="Facebook icon" />
+          </a>
+        </div> -->
+    </footer>
+
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="app/auth/auth.js"></script>
+   <!--  <script src="app/gallery/gallery.js"></script>
+    <script src="app/new/new.js"></script> -->
+    <script src="app/factories/factories.js"></script>
+    <script src="app/app.js"></script>
+  </body>
+</html>
