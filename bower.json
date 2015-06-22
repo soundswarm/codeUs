@@ -10,9 +10,6 @@
     "client/lib"
   ],
   "dependencies": {
-    "angular": "~1.2.18",
-    "angular-route": "~1.2.18",
-    "angular-mocks": "~1.2.18",
-    "angular-ui-router": "~0.2.15"
+    "angular": "~1.4.1"
   }
 }
