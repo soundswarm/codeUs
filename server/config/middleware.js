@@ -1,7 +1,9 @@
 var morgan      = require('morgan'), // used for logging incoming request
     bodyParser  = require('body-parser'),
     helpers     = require('./helpers.js'); // our custom middleware
-
+    db          = require('../app/config');
+    api         = require('../app/helpers/helpers');
+    
 
 module.exports = function (app, express) {
   // Express 4 allows us to use multiple routers with their own configurations

@@ -1,7 +1,7 @@
-var db = require('../config');
+var bookshelf = require('../config');
 var Promise = require('bluebird');
 
-var Coder = db.Model.extend({
+var Coder = bookshelf.Model.extend({
   tableName: 'coders',
   hasTimestamps: true,
 
