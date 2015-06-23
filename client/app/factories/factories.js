@@ -29,7 +29,10 @@ mod.factory('User', function($http) {
         .catch(function(err){
           console.log(err)
         })
-    }
+    },
+    isAuth: function () {
+    return !!$window.localStorage.getItem('127.0.0.1');
+  };
   }
 });
 
