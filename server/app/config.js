@@ -1,11 +1,11 @@
-var Bookshelf = require('bookshelf');
 var path = require('path');
-var knex = require('knex');
+// var knex = require('knex');
 
-var db = Bookshelf.initialize({
+var db = require('knex')({
   client: 'mysql',
   connection: {
-    host: '127.0.0.1',
+    host: '127.0.0.1', // will change for deployment
+    port: '3306',
     user: 'codeus',
     password: 'kbscjm', // initials of our names
     database: 'codeusdb',
@@ -14,9 +14,11 @@ var db = Bookshelf.initialize({
   }
 });
 
-db.knex.schema.hasTable('coders').then(function(exists) {
+var bookshelf = require('bookshelf')(db);
+
+db.schema.hasTable('coders').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('coders', function (coder) {
+    db.schema.createTable('coders', function (coder) {
       coder.increments('id').primary();
       coder.string('gh_username', 255);
       coder.string('name', 255);
@@ -54,9 +56,9 @@ db.knex.schema.hasTable('coders').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('users').then(function(exists) {
+db.schema.hasTable('users').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('users', function (user) {
+    db.schema.createTable('users', function (user) {
       user.increments('id').primary();
       user.integer('coder_id');
       user.string('token');
@@ -68,9 +70,9 @@ db.knex.schema.hasTable('users').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('languages').then(function(exists) {
+db.schema.hasTable('languages').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('languages', function (user) {
+    db.schema.createTable('languages', function (user) {
       user.increments('id').primary();
       user.string('name');
       user.timestamps();
@@ -80,13 +82,14 @@ db.knex.schema.hasTable('languages').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('join_coders_languages').then(function(exists) {
+db.schema.hasTable('join_coders_languages').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('coders_languages', function (language) {
+    db.schema.createTable('join_coders_languages', function (language) {
       language.increments('id').primary();
       language.integer('coder_id');
       language.integer('language_id');
       language.integer('bytes_across_repos');
+      language.integer('language_cred');
       language.timestamps();
     }).then(function (table) {
       console.log('Created Table', table);
@@ -94,9 +97,9 @@ db.knex.schema.hasTable('join_coders_languages').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('technologies').then(function(exists) {
+db.schema.hasTable('technologies').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('technologies', function (tech) {
+    db.schema.createTable('technologies', function (tech) {
       tech.increments('id').primary();
       tech.string('name', 255);
       tech.string('language', 255);
@@ -107,9 +110,9 @@ db.knex.schema.hasTable('technologies').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('technology_files').then(function(exists) {
+db.schema.hasTable('technology_files').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('technology_files', function (file) {
+    db.schema.createTable('technology_files', function (file) {
       file.increments('id').primary();
       file.string('filename', 255);
       file.integer('filenologies_id');
@@ -120,13 +123,14 @@ db.knex.schema.hasTable('technology_files').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('join_coders_technologies').then(function(exists) {
+db.schema.hasTable('join_coders_technologies').then(function(exists) {
   if (!exists) {
-    db.knex.schema.createTable('coders_technologies', function (language) {
+    db.schema.createTable('join_coders_technologies', function (language) {
       language.increments('id').primary();
       language.integer('coder_id');
       language.integer('technology_id');
       language.integer('bytes_across_repos');
+      language.integer('tech_cred');
       language.timestamps();
     }).then(function (table) {
       console.log('Created Table', table);
@@ -134,4 +138,4 @@ db.knex.schema.hasTable('join_coders_technologies').then(function(exists) {
   }
 });
 
-module.exports = db;
+module.exports = bookshelf;
