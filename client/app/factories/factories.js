@@ -7,33 +7,33 @@ mod.factory('User', function($http) {
       JavaScript: 1234,
       Ruby: 23810
     },
-    tecnologies: {
+    technologies: {
       Angular: 1000,
       Backbone: 400,
       Express: 500,
       SQL: 300,
       Mongo: 200
+    },
+    bling: {
+      Followers: 30,
+      Watcher: 20,
+      Stars: 10,
+      Forks: 5,
+      Downloads: 2,
+    },
+    getUser: function() {
+      return $http.get('https://api.github.com/users/soundswarm')
+        .then(function(user) {
+          return user;
+        })
+        .catch(function(err){
+          console.log(err)
+        })
     }
   }
-})
-  //   return 
-  //   {
-  //     user: { 
-  //       ObjectCoffeeScript: 458, 
-  //       JavaScript: 1234,
-  //       Ruby: 23810
-  //     },
-  //     getUser: function($http) {
-  //       $http.get('https://api.github.com/users/soundswarm')
-  //         .success(function(data) {
-  //           $scope.user.login = data.login;
-  //           $scope.user.avatar_url = data.avatar_url;
-  //           $scope.user.url = data.html_url;
+});
 
-  //         })
-  //       }    
-  //     }
-  //   }
+
 
   
 
