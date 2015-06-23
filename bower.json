@@ -1,15 +1,18 @@
 {
-  "name": "haiku-friend",
+  "name": "GitHubForum",
   "version": "0.0.0",
   "authors": [],
   "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
+    "bower_components"
   ],
   "dependencies": {
     "angular": "~1.4.1",
-    "bootstrap": "~3.3.5"
+    "bootstrap": "~3.3.5",
+    "bootstrap-css-only": "~3.3.4",
+    "angular-bootstrap": "~0.13.0",
+    "angular-ui-bootstrap-bower": "0.11.0"
   }
 }
