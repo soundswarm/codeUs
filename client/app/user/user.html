@@ -12,9 +12,22 @@
 
   <div class='languages'>
     <h2>Languages</h2>
-    {{user.languages}}
+    <table class='language table'>
+      <tr class='language-experience' ng-repeat='(key, value) in user.languages'>
+        <td class='language'>
+          {{key}}
+        </td>
+        <td class='bytes'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
+
     <div class='language'>
+
     </div>
+
   </div>
 
   <div class='technologies'>

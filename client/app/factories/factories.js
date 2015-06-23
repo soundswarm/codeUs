@@ -2,7 +2,7 @@ var mod = angular.module('GitUs.factories', [])
 
 mod.factory('User', function($http) {
   return {
-    user: { 
+    languages: { 
       ObjectCoffeeScript: 458, 
       JavaScript: 1234,
       Ruby: 23810
