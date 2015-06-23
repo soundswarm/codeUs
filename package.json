@@ -32,16 +32,17 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^2.9.30",
     "body-parser": "^1.4.3",
     "express": "^4.4.5",
+    "github-oauth": "~0.2.1",
+    "http": "0.0.0",
     "jwt-simple": "^0.2.0",
     "mongoose": "^3.8.12",
     "morgan": "^1.1.1",
     "passport": "^0.2.0",
     "passport-local": "^1.0.0",
     "q": "^1.0.1",
-    "request": "^2.36.0",
-    "github-oauth": "~0.2.1",
-    "http": "0.0.0"
+    "request": "^2.36.0"
   }
 }

@@ -1,6 +1,44 @@
 var mod = angular.module('GitUs.factories', [])
 
-//
+mod.factory('User', function($http) {
+  return {
+    languages: { 
+      ObjectCoffeeScript: 458, 
+      JavaScript: 1234,
+      Ruby: 23810
+    },
+    technologies: {
+      Angular: 1000,
+      Backbone: 400,
+      Express: 500,
+      SQL: 300,
+      Mongo: 200
+    },
+    bling: {
+      Followers: 30,
+      Watcher: 20,
+      Stars: 10,
+      Forks: 5,
+      Downloads: 2,
+    },
+    getUser: function() {
+      return $http.get('https://api.github.com/users/soundswarm')
+        .then(function(user) {
+          return user;
+        })
+        .catch(function(err){
+          console.log(err)
+        })
+    },
+    isAuth: function () {
+    return !!$window.localStorage.getItem('127.0.0.1');
+  };
+  }
+});
+
+
+
+  
 
 
 // mod.factory('Auth', function ($http, $location, $window) {
@@ -49,9 +87,3 @@ var mod = angular.module('GitUs.factories', [])
 //     signout: signout
 //   };
 // })
-mod.factory('User', function() {
-
-  return {
-
-  };
-})

@@ -12,16 +12,49 @@
 
   <div class='languages'>
     <h2>Languages</h2>
-    <div class='language'>
-    </div>
+
+    <table class='language table'>
+      <tr class='language-experience' ng-repeat='(key, value) in user.languages'>
+        <td class='language'>
+          {{key}}
+        </td>
+        <td class='bytes'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
   </div>
 
   <div class='technologies'>
     <h2>Technologies</h2>
+    <table class='technologies table'>
+      <tr class='technology-experience' ng-repeat='(key, value) in user.technologies'>
+        <td class='technology'>
+          {{key}}
+        </td>
+        <td class='bytes'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
   </div>
 
-  <div class='github-cred'>
+  <div class='cred'>
     <h2> Github Cred</h2>
+    <table class='cred table'>
+      <tr class='notables' ng-repeat='(key, value) in user.bling'>
+        <td class='bling'>
+          {{key}}
+        </td>
+        <td class='count'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
+
     <div class='followers'></div>
     <div class='stars'></div>
     <div class='forks'></div>
