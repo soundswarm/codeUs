@@ -1,11 +1,14 @@
 var mod = angular.module('GitUs.factories', [])
-  // var user
 
-
-  
-
-  // mod.factory('User', function() {
-
+mod.factory('User', function($http) {
+  return {
+    user: { 
+      ObjectCoffeeScript: 458, 
+      JavaScript: 1234,
+      Ruby: 23810
+    }
+  }
+})
   //   return 
   //   {
   //     user: { 
@@ -25,7 +28,7 @@ var mod = angular.module('GitUs.factories', [])
   //     }
   //   }
 
-//
+  
 
 
 // mod.factory('Auth', function ($http, $location, $window) {
