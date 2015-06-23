@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: ['client/lib/angular/angular.min.js', 'client/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
-        'client/lib/angular-ui-router/release/angular-ui-router.min.js', 'public/lib/backbone.js'],
+        'client/lib/angular-ui-router/release/angular-ui-router.min.js'],
         dest: 'client/dist/production.js'
       }
     },
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
 
     cssmin: {
       build: {
-        src: 'client/lib/bootstrap-css-only/css/bootstrap.min.css',
+        src: ['client/lib/bootstrap-css-only/css/bootstrap.min.css', 'client/app/styles/styles.css'],
         dest: 'client/dist/style.min.css'
       }
     },
