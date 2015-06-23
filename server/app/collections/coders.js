@@ -1,8 +1,8 @@
 var db = require('../config');
-var CoderBrief = require('../models/abbrProfile');
+var Coder = require('../models/coder');
 
 var Coders = new db.Collection();
 
-Coders.model = CoderBrief;
+Coders.model = Coder;
 
 module.exports = Coders;

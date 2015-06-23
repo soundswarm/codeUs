@@ -7,7 +7,6 @@ var Coder = db.Model.extend({
 
   initialize: function(){
     this.on('creating', this.populateJoins, this);
-    // also on creating an instance of abbrProfile and populating it with its data?
   },
 
   populateJoins: function(){

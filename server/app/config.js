@@ -87,6 +87,7 @@ db.knex.schema.hasTable('join_coders_languages').then(function(exists) {
       language.integer('coder_id');
       language.integer('language_id');
       language.integer('bytes_across_repos');
+      language.integer('language_cred');
       language.timestamps();
     }).then(function (table) {
       console.log('Created Table', table);
@@ -127,6 +128,7 @@ db.knex.schema.hasTable('join_coders_technologies').then(function(exists) {
       language.integer('coder_id');
       language.integer('technology_id');
       language.integer('bytes_across_repos');
+      language.integer('tech_cred');
       language.timestamps();
     }).then(function (table) {
       console.log('Created Table', table);
