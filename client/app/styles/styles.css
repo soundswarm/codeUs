@@ -3,3 +3,24 @@
    width: 100%;
    margin-top: 0.2em;
 }
+.avatar {
+  height: 50px;
+  width: 50px;
+}
+.button-block, .signin {
+  width: 200px;
+}
+.signin {
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  text-align: center;
+  color: white;
+}
+#signin-container {
+  background-image: url('../../assets/eduhackathon.jpg');
+  background-size: 100%;
+
+}
+
