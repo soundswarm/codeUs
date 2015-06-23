@@ -2,7 +2,9 @@ angular.module('GitUs', [
   'GitUs.factories',
   'GitUs.auth',
   'GitUs.user',
+  'ui.bootstrap',
   'ui.router'
+
 ])
 .config(function($httpProvider, $stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('');//change
@@ -16,7 +18,7 @@ angular.module('GitUs', [
 
   $stateProvider
     .state('user', {
-      url: '/user', 
+      url: '/user',
       templateUrl: 'app/user/user.html',
       controller: 'UserController'
 

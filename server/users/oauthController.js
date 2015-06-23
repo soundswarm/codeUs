@@ -20,7 +20,13 @@ githubOAuth.on('error', function(err) {
 githubOAuth.on('token', function(token, serverResponse) {
   console.log('here is your shiny new github oauth token', token)
   serverResponse.end(JSON.stringify(token))
-})
+});
+
+var encodeToken = function(token) {
+  var secret = 'madhatter';
+  var token = jwt.encode(token, secret);
+  return token;
+}
 
 
 module.exports = {
