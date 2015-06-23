@@ -12,6 +12,7 @@
 
   <div class='languages'>
     <h2>Languages</h2>
+
     <table class='language table'>
       <tr class='language-experience' ng-repeat='(key, value) in user.languages'>
         <td class='language'>
@@ -23,15 +24,21 @@
 
       </tr>
     </table>
-
-    <div class='language'>
-
-    </div>
-
   </div>
 
   <div class='technologies'>
     <h2>Technologies</h2>
+    <table class='technologies table'>
+      <tr class='technology-experience' ng-repeat='(key, value) in user.languages'>
+        <td class='technology'>
+          {{key}}
+        </td>
+        <td class='bytes'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
   </div>
 
   <div class='github-cred'>

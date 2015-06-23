@@ -1,11 +1,7 @@
 var mod = angular.module('GitUs.user', [])
 mod.controller('UserController', function($scope, $http, User) {
   $scope.user = {};
-  // $scope.user.languages = { 
-  //   ObjectCoffeeScript: 458, 
-  //   JavaScript: 1234,
-  //   Ruby: 23810
-  // };
+
   $scope.user.languages = User.languages;
 
   $http.get('https://api.github.com/users/soundswarm')

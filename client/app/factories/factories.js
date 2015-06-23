@@ -6,6 +6,13 @@ mod.factory('User', function($http) {
       ObjectCoffeeScript: 458, 
       JavaScript: 1234,
       Ruby: 23810
+    },
+    tecnologies: {
+      Angular: 1000,
+      Backbone: 400,
+      Express: 500,
+      SQL: 300,
+      Mongo: 200
     }
   }
 })
