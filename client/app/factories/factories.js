@@ -30,9 +30,9 @@ mod.factory('User', function($http) {
           console.log(err)
         })
     },
-    isAuth: function () {
-    return !!$window.localStorage.getItem('127.0.0.1');
-  };
+    // isAuth: function () {
+    //   return !!$window.localStorage.getItem('127.0.0.1');
+    // }
   }
 });
 
