@@ -6,7 +6,9 @@ var Coder = bookshelf.Model.extend({
   hasTimestamps: true,
 
   initialize: function(){
-    this.on('creating', this.populateJoins, this);
+    this.on('creating', function(model, attrs, options) {
+      this.populateJoins;
+    }, this);
   },
 
   populateJoins: function(){
