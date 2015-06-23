@@ -1,4 +1,29 @@
 var mod = angular.module('GitUs.factories', [])
+  // var user
+
+
+  
+
+  // mod.factory('User', function() {
+
+  //   return 
+  //   {
+  //     user: { 
+  //       ObjectCoffeeScript: 458, 
+  //       JavaScript: 1234,
+  //       Ruby: 23810
+  //     },
+  //     getUser: function($http) {
+  //       $http.get('https://api.github.com/users/soundswarm')
+  //         .success(function(data) {
+  //           $scope.user.login = data.login;
+  //           $scope.user.avatar_url = data.avatar_url;
+  //           $scope.user.url = data.html_url;
+
+  //         })
+  //       }    
+  //     }
+  //   }
 
 //
 
@@ -49,9 +74,3 @@ var mod = angular.module('GitUs.factories', [])
 //     signout: signout
 //   };
 // })
-mod.factory('User', function() {
-
-  return {
-
-  };
-})
