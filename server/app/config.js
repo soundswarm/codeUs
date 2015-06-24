@@ -24,13 +24,14 @@ db.schema.hasTable('coders').then(function(exists) {
       coder.string('name', 255);
       coder.string('photo_url', 255);
       coder.string('location', 255);
-      coder.dateTime('gh_member_since');
+      coder.string('gh_member_since');
       coder.integer('stars');
       coder.integer('forks');
       coder.integer('watchers');
       coder.integer('downloads');
       coder.integer('cred');
       coder.string('gh_site_url', 255);
+      coder.string('email', 255);
       // tier 2 attributes below
       coder.integer('collab_count');
       coder.string('commit_pattern', 255);
@@ -42,7 +43,7 @@ db.schema.hasTable('coders').then(function(exists) {
       coder.string('organizations', 255);
       coder.string('so_location', 255);
       coder.string('so_name', 255);
-      coder.dateTime('so_member_since');
+      coder.string('so_member_since');
       coder.integer('so_reputation');
       coder.integer('so_answer_count');
       coder.integer('so_question_count');
