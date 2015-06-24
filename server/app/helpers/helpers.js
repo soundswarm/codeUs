@@ -3,6 +3,7 @@ var Coder = require('../models/coder');
 var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
+var _ = require('underscore');
 var token =  "5fb3423cb05581ac762ecab2f9484d3d9f5c6be9";
 
 var api = {
@@ -53,12 +54,27 @@ var api = {
   },
   getReposTechnologies: function(repos) {
 
+  },
+  reposScores: function(repos) {
+  	var res = {};
+  	_.each(repos, function(repo) {
+  		_.each(repo.languages, function(kilobytes, language) {
+  			if(res[language]) {
+  				res[language] += kilobytes/1000;
+  			} else {
+  				res[language] = kilobytes/1000;
+  			}
+  		})
+  	})
+  	return res;
   }
+  
 };
 var username = 'soundswarm';
 api.getUser(username).promise().bind(api)
   .then(api.getRepos)
   .then(api.getReposLanguages)
+  .then(api.reposScores)
   .then(function(b){
     console.dir(b)
   })
