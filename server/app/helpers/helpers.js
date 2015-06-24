@@ -1,59 +1,85 @@
 // populate a single Coder's profile 
 var Coder = require('../models/coder');
 var Coders = require('../collections/coders');
-// var Promise = require('bluebird');
-var apicalls = require('request-promise');
+var rp = require('request-promise');
+var bb = require('bluebird');
+var token =  "5fb3423cb05581ac762ecab2f9484d3d9f5c6be9";
 
-// var coder = new Coder({
-// 	gh_username: 'dummytesting',
-// 	name: 'Testing Dummy'
-// });
+var api = {
+//get user
+//get repos
+// for each repos
+  // extend languages
+  // extend cred
+  // extend technologies
+// total repoScores
+  root:'https://api.github.com',
+  options: {
+    headers: {
+      'User-Agent': 'CodeUs-App',
+      'Authorization': 'token '+token 
+    },
+    transform: function(body, response) {  
+      return JSON.parse(body);
+    }
+  },
+  authenticateUser: function(token) {
+    return user;
+  },
+  getUser: function(username) {
+    this.options.url = this.root+'/users/'+username;
+    return rp(this.options);
+    // returns user object
+  },
+  getRepos: function(user) {
+    this.options.url  = user.repos_url;
+    return rp(this.options);
+    //returns array of repo objects
+  },
+  getReposLanguages: function(repos) {
+    return bb.all(repos.map(function(repo) {
+      this.options.url = repo.languages_url;
+      return rp(this.options)
+     }, this))
+     .then(function(languages) {
+      	for(var i=0;i<repos.length; i++) {
+      		repos[i].languages= languages[i];
+      	}
+      	return repos;
+      })
+  },
+  getReposCred: function(repos) {
 
-// coder.save().then(function(newCoder){
-// 	Coders.add(newCoder);
-// 	console.log('new coder added to collection', newCoder);
-// });
+  },
+  getReposTechnologies: function(repos) {
 
-var options = {
-	url: 'https://api.github.com/users/soundswarm',
-	headers: {
-		'User-Agent': 'CodeUs-App'
-	}
+  }
 };
-
-apicalls(options)
-	.then(function(response) {
-		var parsed = JSON.parse(response);
-		var coder = new Coder({
-			gh_username: parsed.login,
-			name: parsed.name,
-			location: parsed.location,
-			email: parsed.email,
-			gh_site_url: parsed.blog,
-			photo_url: parsed.avatar_url,
-			gh_member_since: parsed.created_at
-		});
-		coder.save().then(function(newCoder){
-			Coders.add(newCoder);
-			console.log('new coder added to collection', newCoder);
-		});
-});
-
-module.exports = {
-
-	token: '9166b8e167a0c49fe859f17601a7a33ea6b89e8a',
-
-	initUser: function(token) {
-		return user;
-	}
+var username = 'soundswarm';
+api.getUser(username).promise().bind(api)
+  .then(api.getRepos)
+  .then(api.getReposLanguages)
+  .then(function(b){
+    console.dir(b)
+  })
 
 
 
-
-
-
-
-
-
-};
+// rp(options)
+// 	.then(function(response) {
+// 		var parsed = JSON.parse(response);
+// 		var coder = new Coder({
+// 			gh_username: parsed.login,
+// 			name: parsed.name,
+// 			location: parsed.location,
+// 			email: parsed.email,
+// 			gh_site_url: parsed.blog,
+// 			photo_url: parsed.avatar_url,
+// 			gh_member_since: parsed.created_at
+// 		});
+// 		coder.save().then(function(newCoder){
+// 			Coders.add(newCoder);
+// 			console.log('new coder added to collection', newCoder);
+// 		});
+// });
 
