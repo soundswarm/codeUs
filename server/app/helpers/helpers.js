@@ -58,6 +58,8 @@ var api = {
   reposScores: function(repos) {
   	var res = {};
   	_.each(repos, function(repo) {
+  		
+  		//calculate languages
   		_.each(repo.languages, function(kilobytes, language) {
   			if(res[language]) {
   				res[language] += kilobytes/1000;
@@ -65,6 +67,25 @@ var api = {
   				res[language] = kilobytes/1000;
   			}
   		})
+
+  		//calculate stargazers
+  		if(res.stargazers_count) {
+				res.stargazers_count += repo.stargazers_count
+			} else {
+				res.stargazers_count = repo.stargazers_count
+			}
+
+			//calculate watchers
+  		if(res.watchers_count) {
+				res.watchers_count += repo.watchers_count
+			} else {
+				res.watchers_count = repo.watchers_count
+			}
+			if(res.forks) {
+				res.forks += repo.forks
+			} else {
+				res.forks = repo.forks
+			}
   	})
   	return res;
   }
