@@ -25,9 +25,9 @@ db.schema.hasTable('coders').then(function(exists) {
       coder.string('photo_url', 255);
       coder.string('location', 255);
       coder.string('gh_member_since');
-      coder.integer('stars');
+      coder.integer('stargazers_count');
       coder.integer('forks');
-      coder.integer('watchers');
+      coder.integer('watchers_count');
       coder.integer('downloads');
       coder.integer('cred');
       coder.string('gh_site_url', 255);
