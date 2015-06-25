@@ -4,7 +4,9 @@ var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-// var token =;//add token
+var token = 'fb06bcad775c4e3fc9b99fa7271b56ba3a8e6425';// add one of our tokens 
+                                                       // do not push this file with token
+                                                       // to GitHub!
 
 
 var api = {
@@ -111,7 +113,7 @@ var api = {
 };
 var username = 'soundswarm';
 
-//create a new coder. DELETE THIS. JUST HERE FOR TESTING
+// create a new coder. DELETE THIS. JUST HERE FOR TESTING
 // var coder = new Coder({
 //  gh_username: username,
 // });
