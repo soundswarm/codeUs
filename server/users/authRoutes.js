@@ -4,7 +4,7 @@
 var passport = require('passport')
   , util = require('util')
   , GitHubStrategy = require('passport-github').Strategy;
-
+ 
 module.exports = function(app) {
 
 
@@ -28,7 +28,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
-});
+});;
 
 // Use the GitHubStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
