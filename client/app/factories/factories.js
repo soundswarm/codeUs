@@ -21,15 +21,15 @@ mod.factory('User', function($http) {
       Forks: 5,
       Downloads: 2,
     },
-    // getUser: function() {
-    //   return $http.get('https://api.github.com/users/soundswarm')
-    //     .then(function(user) {
-    //       return user;
-    //     })
-    //     .catch(function(err){
-    //       console.log(err)
-    //     })
-    // }
+    getUser: function() {
+      return $http.get('https://api.github.com/users/soundswarm')
+        .then(function(user) {
+          return user;
+        })
+        .catch(function(err){
+          console.log(err)
+        })
+    }
   }
 });
 
@@ -37,7 +37,7 @@ mod.factory('Auth', function($http) {
   return {
     signin: function() {
        console.log('inAuthcontroller')
-      return $http.get('http://127.0.0.1:8000/auth')
+      return $http.get('http://127.0.0.1:8000/auth/github')
     }
     //implement a function that checks if user is signed in.
     // isSignedIn: function() {
