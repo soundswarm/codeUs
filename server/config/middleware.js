@@ -12,8 +12,8 @@ module.exports = function (app, express) {
   // Express 4 allows us to use multiple routers with their own configurations
   var authRouter = express.Router();
   var apiRouter = express.Router();
-
-
+  app.options('*', cors());
+  app.use( cors() );
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
@@ -29,7 +29,8 @@ module.exports = function (app, express) {
 
   app.use(authRouter); // use user router for all user request
   app.use('/api', apiRouter);
-
+   app.options('*', cors());
+  app.use( cors() );
   // app.use(helpers.errorLogger);
   // app.use(helpers.errorHandler);
 

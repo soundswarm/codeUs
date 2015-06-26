@@ -27,7 +27,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
-});;
+});
 
 // Use the GitHubStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
@@ -39,7 +39,8 @@ passport.use(new GitHubStrategy({
     callbackURL: githubOAuth.callbackURI
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log('access token', accessToken)
+    console.log('access token', accessToken, 'profile', profile);
+
     // asynchronous verification, for effect...
     process.nextTick(function () {
       
@@ -87,7 +88,8 @@ passport.use(new GitHubStrategy({
   //   request.  The first step in GitHub authentication will involve redirecting
   //   the user to github.com.  After authorization, GitHubwill redirect the user
   //   back to this application at /auth/github/callback
-  app.get('/auth/github',
+
+  app.get('/auth/github', 
     passport.authenticate('github'),
     function(req, res){
     //   console.log('in auth')

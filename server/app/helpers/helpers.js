@@ -123,17 +123,17 @@ var username = 'soundswarm';
 // });
 
 //get repos scores then add them to database
-api.getUser(username).promise().bind(api)
-  .then(api.getRepos)
-  .then(api.getReposLanguages)
-  .then(api.reposScores)
-  .then(function(scores) {
-    api.saveTodB(username, scores);
-  })
-  .then(function() {
+// api.getUser(username).promise().bind(api)
+//   .then(api.getRepos)
+//   .then(api.getReposLanguages)
+//   .then(api.reposScores)
+//   .then(function(scores) {
+//     api.saveTodB(username, scores);
+//   })
+//   .then(function() {
 
-  })
-  .catch(console.error)
+//   })
+//   .catch('error', console.error)
   // .then(function(b){
   //   console.dir(b)
   // })
