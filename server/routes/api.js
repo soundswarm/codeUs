@@ -7,7 +7,7 @@ var api = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
 
-var token = '<in Evernote>'; // do not upload to GitHub with this token assigned explicitly!
+var token = 'ad61c101b349704360c95ffbc91eec0ccdafee12'; // do not upload to GitHub with this token assigned explicitly!
 
 module.exports = function (app) {
 
@@ -102,61 +102,4 @@ module.exports = function (app) {
 		// }
 	});
 
-	app.get('/populate', function(req, res, next) {
-		console.log('/populate route hit');
-		var full = true;
-		var options = {
-			url: 'https://api.github.com/users?per_page=100',
-			headers: {
-				'User-Agent': 'CodeUs-App',
-				'Authorization': 'token '+ token 
-			}
-		};
-		console.log('full: ', full);
-		// fetch users from GET /users call, save to db
-		console.log('options: ', options);
-		api(options)
-		.then(function(response) {
-			var parsed = JSON.parse(response);
-			console.log('full parsed', parsed);
-			if (parsed.length < 100) { full = false;}
-			for (var i=0; i < parsed.length; i++) {
-				since = parsed[i].id;
-				console.log('record ' + since + ': ' + parsed[i]);
-				new Coder({gh_username: parsed.login}).fetch()
-    			.then(function(coder) {
-    				if (coder) {
-    					console.log('existing coder: ', coder.gh_username);
-			      	coder.save({
-			      		gh_username: parsed[i].login,
-								name: parsed[i].name,
-								location: parsed[i].location,
-								email: parsed[i].email,
-								gh_site_url: parsed[i].blog,
-								photo_url: parsed[i].avatar_url,
-								gh_member_since: parsed[i].created_at
-			      	});
-    				} else {
-    					var newCoder = new Coder({
-			      		gh_username: parsed[i].login,
-								name: parsed[i].name,
-								location: parsed[i].location,
-								email: parsed[i].email,
-								gh_site_url: parsed[i].blog,
-								photo_url: parsed[i].avatar_url,
-								gh_member_since: parsed[i].created_at	    						
-    					});
-    					newCoder.save()
-    						.then(function(coder) {
-      						Coders.set(coder);
-    						});
-		      	console.log('Coder ' + parsed[i].name + ' added to DB');
-					}
-				});
-		options.url = 'https://api.github.com/users?per_page=100&since=' + since;
-		console.log(options.url);
-		}
-	})
-	.catch(console.error);
-	});
 };
