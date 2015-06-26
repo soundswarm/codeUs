@@ -1,6 +1,7 @@
 var mod = angular.module('GitUs.auth', []);
 
-mod.controller('AuthController', function($scope, $window, $location) {
+mod.controller('AuthController', function($scope, Auth) {
+  $scope.signin = Auth.signin;
   // $scope.user = {};
 
   // $scope.signin = function() {

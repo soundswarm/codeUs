@@ -7,9 +7,7 @@ var githubOAuth = {
   client: 'd6eb2ec366cc31185c1e',
   clientSecret: '2576bc4f18e7e98e7a2c820f80a249a9e0a4a153',
   baseURL: 'http://127.0.0.1:8000',
-  loginURI: '/signin',
   callbackURI: '/success',
-  scope: '' // optional, default scope is set to user
 };
 
 // Passport session setup.
@@ -54,15 +52,13 @@ passport.use(new GitHubStrategy({
 //   the request is authenticated (typically via a persistent login session),
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
-module.exports = 
-{
+module.exports = {
   ensureAuthenticated: function(req, res, next) {
     console.log('ensureauth'); 
     if (req.isAuthenticated()) {
-
       return next(); 
     }
-    res.redirect('/signin')
+    res.redirect('/#/signin')
   }
 };
 

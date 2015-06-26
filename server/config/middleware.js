@@ -1,12 +1,13 @@
-var morgan      = require('morgan'), // used for logging incoming request
-    bodyParser  = require('body-parser'),
-    helpers     = require('./helpers.js'); // our custom middleware
-    db          = require('../app/config');
-    api         = require('../app/helpers/helpers');
-    session     = require('express-session');
-    passport    = require('passport');
-    util        = require('util');
-    cookieParser = require('cookie-parser');
+var morgan      = require('morgan'); // used for logging incoming request
+var bodyParser  = require('body-parser');
+var helpers     = require('./helpers.js'); // our custom middleware
+var db          = require('../app/config');
+var api         = require('../app/helpers/helpers');
+var session     = require('express-session');
+var passport    = require('passport');
+var util        = require('util');
+var cookieParser = require('cookie-parser');
+var cors        = require('cors')
     
     
 
@@ -15,7 +16,7 @@ module.exports = function (app, express) {
   var authRouter = express.Router();
   var apiRouter = express.Router();
 
-
+  app.use( cors());
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
@@ -36,6 +37,11 @@ module.exports = function (app, express) {
   app.use(passport.session());
 
 
+  // app.use(function(req, res, next) {
+  // //   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // //   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,accept,content-type');
+  // //   res.setHeader('Access-Control-Allow-Credentials', true);
+  // });
 
   // inject our routers into their respective route file
   require('../users/authRoutes.js')(authRouter);

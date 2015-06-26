@@ -1,10 +1,13 @@
 var authController = require('./authController.js');
-
+var passport = require('passport');
 module.exports = function(app) {
-  app.get('/user', authController.ensureAuthenticated, function(req, res){
+  app.get('/#/user', authController.ensureAuthenticated, function(req, res){
     res.redirect('/#/user')
   });
-  // app.get('/success', authController.ensureAuthenticated);
+  // app.get('/auth', authController.ensureAuthenticated, function(req, res){
+  //   console.log('/auth--------' );
+  //   res.send('{true}');
+  // });
 
 
   // GET /auth/github
@@ -12,8 +15,8 @@ module.exports = function(app) {
   //   request.  The first step in GitHub authentication will involve redirecting
   //   the user to github.com.  After authorization, GitHubwill redirect the user
   //   back to this application at /auth/github/callback
-  app.get('/auth/github',
-    passport.authenticate('github', { scope: [ '' ], failureRedirect: '/signin' }),
+  app.get('/auth',
+    passport.authenticate('github', { scope: [ '' ], failureRedirect: '/#/signin' }),
     function(req, res){
       // The request will be redirected to GitHub for authentication, so this
       // function will not be called.
@@ -26,13 +29,16 @@ module.exports = function(app) {
   //   which, in this example, will redirect the user to the home page.
   app.get('/success', 
     // passport.authenticate('github', { failureRedirect: '/signin' }),
+    
     function(req, res) {
+          res.setHeader('Access-Control-Allow-Origin', '*');
+
       res.redirect('/#/user');
     });
 
-  app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
+  // app.get('/logout', function(req, res){
+  //   req.logout();
+  //   res.redirect('/');
+  // });
 
 };

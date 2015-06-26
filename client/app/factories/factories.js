@@ -21,20 +21,37 @@ mod.factory('User', function($http) {
       Forks: 5,
       Downloads: 2,
     },
-    getUser: function() {
-      return $http.get('https://api.github.com/users/soundswarm')
-        .then(function(user) {
-          return user;
-        })
-        .catch(function(err){
-          console.log(err)
-        })
-    },
-    // isAuth: function () {
-    //   return !!$window.localStorage.getItem('127.0.0.1');
+    // getUser: function() {
+    //   return $http.get('https://api.github.com/users/soundswarm')
+    //     .then(function(user) {
+    //       return user;
+    //     })
+    //     .catch(function(err){
+    //       console.log(err)
+    //     })
     // }
   }
 });
+
+mod.factory('Auth', function($http) {
+  return {
+    signin: function() {
+       console.log('inAuthcontroller')
+      return $http.get('http://127.0.0.1:8000/auth')
+    }
+    //implement a function that checks if user is signed in.
+    // isSignedIn: function() {
+    //   return $http.get('http://127.0.0.1:8000/auth')
+    //     .then(function(bool) {
+    //       return bool
+    //     })
+    //     .catch(function(err){
+    //       console.log(err)
+    //     })
+    // }
+  }
+});
+    
 
 
 
