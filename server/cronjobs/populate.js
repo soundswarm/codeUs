@@ -1,7 +1,7 @@
 var api = require('request-promise');
 var Coder = require('../app/models/coder');
 
-var token = 'ad61c101b349704360c95ffbc91eec0ccdafee12';
+var token = 'TOKEN HERE';
 
 var full = true;
 var options = {
