@@ -87,7 +87,7 @@ passport.use(new GitHubStrategy({
   //   request.  The first step in GitHub authentication will involve redirecting
   //   the user to github.com.  After authorization, GitHubwill redirect the user
   //   back to this application at /auth/github/callback
-  app.get('/signin',
+  app.get('/auth/github',
     passport.authenticate('github'),
     function(req, res){
     //   console.log('in auth')

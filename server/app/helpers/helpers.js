@@ -4,7 +4,7 @@ var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'fb06bcad775c4e3fc9b99fa7271b56ba3a8e6425';// add one of our tokens 
+var token = 'addd token here';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 
