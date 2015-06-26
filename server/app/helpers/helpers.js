@@ -4,7 +4,7 @@ var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = '';// add one of our tokens 
+var token = 'fb06bcad775c4e3fc9b99fa7271b56ba3a8e6425';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 
@@ -123,17 +123,17 @@ var username = 'soundswarm';
 // });
 
 //get repos scores then add them to database
-// api.getUser(username).promise().bind(api)
-//   .then(api.getRepos)
-//   .then(api.getReposLanguages)
-//   .then(api.reposScores)
-//   .then(function(scores) {
-//     api.saveTodB(username, scores);
-//   })
-//   .then(function() {
+api.getUser(username).promise().bind(api)
+  .then(api.getRepos)
+  .then(api.getReposLanguages)
+  .then(api.reposScores)
+  .then(function(scores) {
+    api.saveTodB(username, scores);
+  })
+  .then(function() {
 
-//   })
-//   .catch(console.error)
+  })
+  .catch(console.error)
   // .then(function(b){
   //   console.dir(b)
   // })
