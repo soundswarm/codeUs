@@ -7,8 +7,6 @@ var _ = require('underscore');
 var token = 'ADD HERE';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
-
-
 var api = {
 //get user
 //get repos

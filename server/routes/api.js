@@ -20,13 +20,7 @@ var Coders = require('../app/collections/coders');
 var token = '9bebb79afb0646397c80104f24da8766d1a555e6'; // do not upload to GitHub with this token assigned explicitly!
 
 module.exports = function (app) {
-	// app.get('/user', authController.ensureAuthenticated,
-	//  function(req, res) {
-	//  	console.log('hhhhhhhhhhhit---------------------')
-	//  	res.status(200);
-	//  	res.send('heeeeeeelllllllllllloooo');
-	// })
-	// should be called with the following endpoint syntax: GET /api/realtime?u={username}
+
 	app.get('/user', authController.ensureAuthenticated, function(req, res, next) {
 		console.log('/realtime route hit', req.user.username);
 		var username = req.user.username;
@@ -36,17 +30,16 @@ module.exports = function (app) {
 			headers: {
 				'User-Agent': 'CodeUs-App',
 				'Authorization': 'token '+ token 
-			}
+			},
+	    transform: function(body, response) {  
+	      return JSON.parse(body);
+	    }
 		};
 		options.url += username;
 		// fetch real-time user attr from API, assign to empty coder object
 		api(options)
-		.then(function(response) {
-			var parsed = JSON.parse(response);
-			coder.followers = parsed.followers;
-			coder.updated_at = parsed.updated_at;
-			coder.repo_count = parsed.public_repos;
-			coder.gh_username = username;
+		.then(function(user) {
+			coder = user;
 		})
 		// fetch rest of the data from the database
 		.then(function() {
