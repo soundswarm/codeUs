@@ -25,7 +25,7 @@ module.exports = function populate() {
 		new Coder({gh_username: coderapi.login}).fetch()
 				.then(function(dbcoder) {
 					if (dbcoder) {
-						console.log('existing coder: ', dbcoder.gh_username);
+						// console.log('existing coder: ', dbcoder.gh_username);
 		      	dbcoder.save({
 		      		gh_username: coderapi.login,
 							name: coderapi.name,
@@ -36,7 +36,7 @@ module.exports = function populate() {
 							gh_member_since: coderapi.created_at
 		      	});
 					} else {
-						console.log(coderapi);
+						// console.log(coderapi);
 						var newCoder = new Coder({
 		      		gh_username: coderapi.login,
 							name: coderapi.name,
@@ -73,7 +73,7 @@ module.exports = function populate() {
 
 		}
 		options.url = 'https://api.github.com/users?per_page=100&since=' + since;
-		console.log(options.url);
+		// console.log(options.url);
 	})
 	.catch(console.error);
 };

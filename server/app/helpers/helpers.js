@@ -97,7 +97,6 @@ var api = {
     new Coder({gh_username: username})
     .fetch()
     .then(function(coder) {
-      // console.log(scores.stargazers_count);
       coder.save({
         stargazers_count: scores.stargazers_count,
         watchers_count: scores.watchers_count,
@@ -106,7 +105,6 @@ var api = {
       .then(function(coder) {
         Coders.set(coder)
       })
-      // console.log(coder);
     })
   }
   
@@ -134,24 +132,3 @@ var username = 'soundswarm';
 
 //   })
 //   .catch(console.error)
-
-
-
-// rp(options)
-//  .then(function(response) {
-//    var parsed = JSON.parse(response);
-    // var coder = new Coder({
-    //  gh_username: parsed.login,
-    //  name: parsed.name,
-    //  location: parsed.location,
-    //  email: parsed.email,
-    //  gh_site_url: parsed.blog,
-    //  photo_url: parsed.avatar_url,
-    //  gh_member_since: parsed.created_at
-    // });
-    // coder.save().then(function(newCoder){
-    //  Coders.add(newCoder);
-    //  console.log('new coder added to collection', newCoder);
-    // });
-// });
-

@@ -1,7 +1,18 @@
 // add this to server.js:
 // app.use('/api', apiRouter);
 
-// var apiRouter = express.Router();
+// C: /#/user
+	// C: initialize function does GET to server for (/realtime) realtime GH info, database info 
+	// 	and(/addsodata) stack overflow
+
+		// S: determine GH username in req.user.username.  get realtime GH info and send back to client
+		// S: if user in db:
+			// get db info and send back to client
+			// else calc scores via GH api calls
+				// send scores to client
+				// put scores in db
+
+
 var helper = require('../app/helpers/helpers');
 var api = require('request-promise');
 var Coder = require('../app/models/coder');

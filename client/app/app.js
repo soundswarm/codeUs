@@ -7,7 +7,7 @@ angular.module('GitUs', [
 
 ])
 .config(function($httpProvider, $stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('');//change
+  $urlRouterProvider.otherwise('/user');//change
 
   $stateProvider
     .state('signin', {
