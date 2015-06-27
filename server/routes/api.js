@@ -43,7 +43,7 @@ module.exports = function (app) {
 		})
 		// fetch rest of the data from the database
 		.then(function() {
-			new Coder({'gh_username': username})
+			new Coder({'login': username})
 			.fetch()
 			.then(function(userModel) {
 				if (!userModel) {

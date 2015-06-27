@@ -22,12 +22,12 @@ var userOptions = {
 module.exports = function populate() {
 
 	var addCoderToDB = function(coderapi) {
-		new Coder({gh_username: coderapi.login}).fetch()
+		new Coder({login: coderapi.login}).fetch()
 				.then(function(dbcoder) {
 					if (dbcoder) {
-						// console.log('existing coder: ', dbcoder.gh_username);
+						// console.log('existing coder: ', dbcoder.login);
 		      	dbcoder.save({
-		      		gh_username: coderapi.login,
+		      		login: coderapi.login,
 							name: coderapi.name,
 							location: coderapi.location,
 							email: coderapi.email,
@@ -38,7 +38,7 @@ module.exports = function populate() {
 					} else {
 						// console.log(coderapi);
 						var newCoder = new Coder({
-		      		gh_username: coderapi.login,
+		      		login: coderapi.login,
 							name: coderapi.name,
 							location: coderapi.location,
 							email: coderapi.email,
@@ -54,8 +54,8 @@ module.exports = function populate() {
 			});
 		};
 
-	var getFullCoderObj = function(gh_username) {
-		userOptions.url = 'https://api.github.com/users/' + gh_username;
+	var getFullCoderObj = function(login) {
+		userOptions.url = 'https://api.github.com/users/' + login;
 		return api(userOptions);
 	};
 

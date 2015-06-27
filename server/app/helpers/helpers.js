@@ -92,7 +92,7 @@ var api = {
     return scores;
   },
   saveTodB: function(username, scores) {
-    new Coder({gh_username: username})
+    new Coder({login: username})
     .fetch()
     .then(function(coder) {
       coder.save({
@@ -111,7 +111,7 @@ var username = 'soundswarm';
 
 // create a new coder. DELETE THIS. JUST HERE FOR TESTING
 // var coder = new Coder({
-//  gh_username: username,
+//  login: username,
 // });
 // coder.save().then(function(newCoder){
 //  Coders.add(newCoder);
