@@ -20,7 +20,7 @@ db.schema.hasTable('coders').then(function(exists) {
   if (!exists) {
     db.schema.createTable('coders', function (coder) {
       coder.increments('id').primary();
-      coder.string('gh_username', 255);
+      coder.string('login', 255);
       coder.string('name', 255);
       coder.string('photo_url', 255);
       coder.string('location', 255);

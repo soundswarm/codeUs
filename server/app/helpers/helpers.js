@@ -4,12 +4,10 @@ var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'ADD HERE';// add one of our tokens 
+var token = '9bebb79afb0646397c80104f24da8766d1a555e6';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
-
-
-var api = {
+module.exports = api = {
 //get user
 //get repos
 // for each repos
@@ -36,6 +34,7 @@ var api = {
     // returns user object
   },
   getRepos: function(user) {
+    console.log(user);
     this.options.url  = user.repos_url;
     return rp(this.options);
     //returns array of repo objects
@@ -94,26 +93,33 @@ var api = {
     return scores;
   },
   saveTodB: function(username, scores) {
-    new Coder({gh_username: username})
-    .fetch()
-    .then(function(coder) {
-      coder.save({
-        stargazers_count: scores.stargazers_count,
-        watchers_count: scores.watchers_count,
-        forks: scores.forks
-      })
-      .then(function(coder) {
-        Coders.set(coder)
-      })
+    var coder =  new Coder({
+      login: username,
+      stargazers_count: scores.stargazers_count,
+      watchers_count: scores.watchers_count,
+      forks: scores.forks
     })
+    return coder.save()
+      .then(function(coder) {
+        Coders.add(coder)
+        console.log('new coder added to db');
+      })
+  },
+  getScoresAddtoDb: function(username) {
+    return this.getUser(username).promise().bind(this)
+      .then(this.getRepos)
+      .then(this.getReposLanguages)
+      .then(this.reposScores)
+      .then(function(scores) {
+        return this.saveTodB(username, scores);
+      })
+      .catch(console.error)
   }
-  
 };
-var username = 'soundswarm';
 
 // create a new coder. DELETE THIS. JUST HERE FOR TESTING
 // var coder = new Coder({
-//  gh_username: username,
+//  login: username,
 // });
 // coder.save().then(function(newCoder){
 //  Coders.add(newCoder);
@@ -121,6 +127,7 @@ var username = 'soundswarm';
 // });
 
 //get repos scores then add them to database
+// var username ='soundswarm';
 // api.getUser(username).promise().bind(api)
 //   .then(api.getRepos)
 //   .then(api.getReposLanguages)
@@ -129,6 +136,6 @@ var username = 'soundswarm';
 //     api.saveTodB(username, scores);
 //   })
 //   .then(function() {
-
+//     console.log('SCORES ADDED');
 //   })
 //   .catch(console.error)

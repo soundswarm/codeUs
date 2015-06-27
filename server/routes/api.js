@@ -11,46 +11,91 @@
 			// else calc scores via GH api calls
 				// send scores to client
 				// put scores in db
-
-
-var helper = require('../app/helpers/helpers');
-var api = require('request-promise');
+var authController = require('../users/authController.js');
+var helpers = require('../app/helpers/helpers');
+var rp = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
-
-var token = 'ad61c101b349704360c95ffbc91eec0ccdafee12'; // do not upload to GitHub with this token assigned explicitly!
+var token = '9bebb79afb0646397c80104f24da8766d1a555e6'; // do not upload to GitHub with this token assigned explicitly!
 
 module.exports = function (app) {
 
-	// should be called with the following endpoint syntax: GET /api/realtime?u={username}
-	app.get('/realtime', function(req, res, next) {
-		console.log('/realtime route hit');
+	app.get('/user', authController.ensureAuthenticated, function(req, res, next) {
+		console.log('/user', req.user.username);
+		var username = req.user.username;
 		var coder = {};
 		var options = {
 			url: 'https://api.github.com/users/',
 			headers: {
 				'User-Agent': 'CodeUs-App',
 				'Authorization': 'token '+ token 
-			}
+			},
+	    transform: function(body, response) {  
+	      return JSON.parse(body);
+	    }
 		};
-		options.url += req.query.u;
+		options.url += username;
 		// fetch real-time user attr from API, assign to empty coder object
-		api(options)
-		.then(function(response) {
-			var parsed = JSON.parse(response);
-			coder.followers = parsed.followers;
-			coder.updated_at = parsed.updated_at;
-			coder.repo_count = parsed.public_repos;
-			coder.gh_username = req.query.u;
+		rp(options)
+		.then(function(user) {
+			coder = user;
 		})
 		// fetch rest of the data from the database
 		.then(function() {
-			new Coder({'gh_username': req.query.u})
+			new Coder({'login': username})
 			.fetch()
 			.then(function(userModel) {
 				if (!userModel) {
-					console.log('User model ' + req.query.u + ' not found');
+					console.log('User model ' + username + ' not found');
+					helpers.getScoresAddtoDb(username)
+						.then(function() {
+							coder.cred = {};
+							coder.cred.watchers_count = userModel.attributes.forks;
+							coder.cred.watchers_count = userModel.attributes.watchers_count;
+							coder.cred.stargazers_count = userModel.attributes.stargazers_count;
+							coder.name = userModel.attributes.name;
+							coder.location = userModel.attributes.location;
+							coder.email = userModel.attributes.email;
+							coder.gh_site_url = userModel.attributes.blog;
+							coder.photo_url = userModel.attributes.avatar_url;
+							coder.gh_member_since = userModel.attributes.created_at;
+							coder.so_reputation = userModel.attributes.so_reputation;
+							coder.so_answer_count = userModel.attributes.so_answer_count;
+							coder.so_question_count = userModel.attributes.so_question_count;
+							coder.so_upvote_count = userModel.attributes.so_upvote_count;
+							res.status(200).send(coder);
+						})
+					res.status(200).send(coder);
+					// helpers.createUserinDb(username)
+					// 	.then(helpers.getUser(username).promise().bind(this))
+			  //     .then(helpers.getRepos)
+			  //     .then(helpers.getReposLanguages)
+			  //     .then(helpers.reposScores)
+			  //     .then(function(scores) {
+			  //       console.log(scores)
+			  //       // return helpers.saveTodB(username, scores);
+			  //     })
+
+					
+						// then assign coder = userModel.attributes
+					// helpers.getUser(username).promise().bind(this)
+			  //     .then(helpers.getRepos)
+			  //     .then(helpers.getReposLanguages)
+			  //     .then(helpers.reposScores)
+			  //     .then(function(scores) {
+			  //       console.log(scores)
+			  //       // return helpers.saveTodB(username, scores);
+			  //     })
+			  //     .catch(console.error)
+
+						// .then(function(userscores) {
+						// 	console.log('scores', userscores)
+						// })
 				} else {
+					coder.cred = {};
+					coder.cred.watchers_count = userModel.attributes.forks;
+					coder.cred.watchers_count = userModel.attributes.watchers_count;
+					coder.cred.stargazers_count = userModel.attributes.stargazers_count;
 					coder.name = userModel.attributes.name;
 					coder.location = userModel.attributes.location;
 					coder.email = userModel.attributes.email;
@@ -79,7 +124,7 @@ module.exports = function (app) {
 		// while (quotaRemain > 5 && hasMore === true) {
 			// console.log('/addsodata while loop entered');
 			// console.log('link', options.url);
-			api(options)
+			rp(options)
 			.then(function(response) {
 				// console.log('response', response);
 				var parsed = JSON.parse(response);
