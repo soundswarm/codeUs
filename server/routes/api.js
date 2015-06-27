@@ -16,7 +16,7 @@ var helpers = require('../app/helpers/helpers');
 var rp = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
-var token = '9bebb79afb0646397c80104f24da8766d1a555e6'; // do not upload to GitHub with this token assigned explicitly!
+var token = '13fc5a0dd4aca2fc61cc2f6b337c8ce3ada475d3'; // do not upload to GitHub with this token assigned explicitly!
 
 module.exports = function (app) {
 
@@ -48,7 +48,8 @@ module.exports = function (app) {
 				if (!userModel) {
 					console.log('User model ' + username + ' not found');
 					helpers.getScoresAddtoDb(username)
-						.then(function() {
+						.then(function(userModel) {
+							console.log(userModel)
 							coder.cred = {};
 							coder.cred.watchers_count = userModel.attributes.forks;
 							coder.cred.watchers_count = userModel.attributes.watchers_count;
@@ -65,32 +66,6 @@ module.exports = function (app) {
 							coder.so_upvote_count = userModel.attributes.so_upvote_count;
 							res.status(200).send(coder);
 						})
-					res.status(200).send(coder);
-					// helpers.createUserinDb(username)
-					// 	.then(helpers.getUser(username).promise().bind(this))
-			  //     .then(helpers.getRepos)
-			  //     .then(helpers.getReposLanguages)
-			  //     .then(helpers.reposScores)
-			  //     .then(function(scores) {
-			  //       console.log(scores)
-			  //       // return helpers.saveTodB(username, scores);
-			  //     })
-
-					
-						// then assign coder = userModel.attributes
-					// helpers.getUser(username).promise().bind(this)
-			  //     .then(helpers.getRepos)
-			  //     .then(helpers.getReposLanguages)
-			  //     .then(helpers.reposScores)
-			  //     .then(function(scores) {
-			  //       console.log(scores)
-			  //       // return helpers.saveTodB(username, scores);
-			  //     })
-			  //     .catch(console.error)
-
-						// .then(function(userscores) {
-						// 	console.log('scores', userscores)
-						// })
 				} else {
 					coder.cred = {};
 					coder.cred.watchers_count = userModel.attributes.forks;

@@ -4,7 +4,7 @@ var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = '9bebb79afb0646397c80104f24da8766d1a555e6';// add one of our tokens 
+var token = '13fc5a0dd4aca2fc61cc2f6b337c8ce3ada475d3';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -103,6 +103,7 @@ module.exports = api = {
       .then(function(coder) {
         Coders.add(coder)
         console.log('new coder added to db');
+        return coder;
       })
   },
   getScoresAddtoDb: function(username) {
