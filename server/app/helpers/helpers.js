@@ -4,12 +4,10 @@ var Coders = require('../collections/coders');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'fb06bcad775c4e3fc9b99fa7271b56ba3a8e6425';// add one of our tokens 
+var token = '13fc5a0dd4aca2fc61cc2f6b337c8ce3ada475d3';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
-
-
-var api = {
+module.exports = api = {
 //get user
 //get repos
 // for each repos
@@ -36,6 +34,7 @@ var api = {
     // returns user object
   },
   getRepos: function(user) {
+    console.log(user);
     this.options.url  = user.repos_url;
     return rp(this.options);
     //returns array of repo objects
@@ -52,110 +51,93 @@ var api = {
         return repos;
       })
   },
-  getReposCred: function(repos) {
-
-  },
   getReposTechnologies: function(repos) {
 
   },
   reposScores: function(repos) {
     var scores = {};
+    scores.cred = {};
+    scores.languages = {};
+    scores.technologies = {};
     _.each(repos, function(repo) {
       
       //calculate languages
       _.each(repo.languages, function(kilobytes, language) {
-        if(scores[language]) {
-          scores[language] += Math.round(kilobytes/1000);
+        if(scores.languages[language]) {
+          scores.languages[language] += Math.round(kilobytes/1000);
         } else {
-          scores[language] = Math.round(kilobytes/1000);
+          scores.languages[language] = Math.round(kilobytes/1000);
         }
       })
 
       //calculate stargazers
-      if(scores.stargazers_count) {
-        scores.stargazers_count += repo.stargazers_count
+      if(scores.cred.stargazers_count) {
+        scores.cred.stargazers_count += repo.stargazers_count
       } else {
-        scores.stargazers_count = repo.stargazers_count
+        scores.cred.stargazers_count = repo.stargazers_count
       }
 
       //calculate watchers
-      if(scores.watchers_count) {
-        scores.watchers_count += repo.watchers_count
+      if(scores.cred.watchers_count) {
+        scores.cred.watchers_count += repo.watchers_count
       } else {
-        scores.watchers_count = repo.watchers_count
+        scores.cred.watchers_count = repo.watchers_count
       }
       //calculate forks
-      if(scores.forks) {
-        scores.forks += repo.forks
+      if(scores.cred.forks) {
+        scores.cred.forks += repo.forks
       } else {
-        scores.forks = repo.forks
+        scores.cred.forks = repo.forks
       }
     })
     return scores;
   },
-  saveTodB: function(username, scores) {
-    new Coder({gh_username: username})
-    .fetch()
-    .then(function(coder) {
-      // console.log(scores.stargazers_count);
-      coder.save({
-        stargazers_count: scores.stargazers_count,
-        watchers_count: scores.watchers_count,
-        forks: scores.forks
-      })
-      .then(function(coder) {
-        Coders.set(coder)
-      })
-      // console.log(coder);
+  saveToCodersTable: function(username, scores) {
+    var coder =  new Coder({
+      login: username,
+      stargazers_count: scores.stargazers_count,
+      watchers_count: scores.watchers_count,
+      forks: scores.forks
     })
+    return coder.save()
+      .then(function(coder) {
+        Coders.add(coder)
+        console.log('new coder added to db');
+        return coder;
+      })
+  },
+  saveToLanguagesTable: function(languages) {
+    //takes in object of languages
+    // loop through languages
+    // if language not in database
+    // add to database
   }
-  
+  // getScoresAddCoderToDb: function(username) {
+  //   return this.getUser(username).promise().bind(this)
+  //     .then(this.getRepos)
+  //     .then(this.getReposLanguages)
+  //     .then(this.reposScores)
+  //     .then(function(scores) {
+  //       //send response
+  //       //saveToCodersTable
+  //       // saveToLanguagesTable
+  //       return this.saveToCodersTable(username, scores);
+  //     })
+  //     .catch(console.error)
+  // }
 };
-var username = 'soundswarm';
 
-// create a new coder. DELETE THIS. JUST HERE FOR TESTING
-// var coder = new Coder({
-//  gh_username: username,
-// });
-// coder.save().then(function(newCoder){
-//  Coders.add(newCoder);
-//  console.log('new coder added to collection', newCoder);
-// });
 
 //get repos scores then add them to database
-api.getUser(username).promise().bind(api)
-  .then(api.getRepos)
-  .then(api.getReposLanguages)
-  .then(api.reposScores)
-  .then(function(scores) {
-    api.saveTodB(username, scores);
-  })
-  .then(function() {
-
-  })
-  .catch(console.error)
-  // .then(function(b){
-  //   console.dir(b)
-  // })
-
-
-
-
-// rp(options)
-//  .then(function(response) {
-//    var parsed = JSON.parse(response);
-    // var coder = new Coder({
-    //  gh_username: parsed.login,
-    //  name: parsed.name,
-    //  location: parsed.location,
-    //  email: parsed.email,
-    //  gh_site_url: parsed.blog,
-    //  photo_url: parsed.avatar_url,
-    //  gh_member_since: parsed.created_at
-    // });
-    // coder.save().then(function(newCoder){
-    //  Coders.add(newCoder);
-    //  console.log('new coder added to collection', newCoder);
-    // });
-// });
-
+// var username ='soundswarm';
+// api.getUser(username).promise().bind(api)
+//   .then(api.getRepos)
+//   .then(api.getReposLanguages)
+//   .then(api.reposScores)
+//   .then(function(scores) {
+//     api.saveTodB(username, scores);
+//   })
+//   .then(function() {
+//     console.log('SCORES ADDED');
+//   })
+//   .catch(console.error)
