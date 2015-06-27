@@ -27,8 +27,9 @@ module.exports = function (app, express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use(authRouter); // use user router for all user request
   app.use('/api', apiRouter);
+  app.use(authRouter); // use user router for all user request
+ 
 
   // app.use(helpers.errorLogger);
   // app.use(helpers.errorHandler);

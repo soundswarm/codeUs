@@ -11,20 +11,25 @@
 			// else calc scores via GH api calls
 				// send scores to client
 				// put scores in db
-
-
+var authController = require('../users/authController.js');
 var helper = require('../app/helpers/helpers');
 var api = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
 
-var token = 'ad61c101b349704360c95ffbc91eec0ccdafee12'; // do not upload to GitHub with this token assigned explicitly!
+var token = '9bebb79afb0646397c80104f24da8766d1a555e6'; // do not upload to GitHub with this token assigned explicitly!
 
 module.exports = function (app) {
-
+	// app.get('/user', authController.ensureAuthenticated,
+	//  function(req, res) {
+	//  	console.log('hhhhhhhhhhhit---------------------')
+	//  	res.status(200);
+	//  	res.send('heeeeeeelllllllllllloooo');
+	// })
 	// should be called with the following endpoint syntax: GET /api/realtime?u={username}
-	app.get('/realtime', function(req, res, next) {
-		console.log('/realtime route hit');
+	app.get('/user', authController.ensureAuthenticated, function(req, res, next) {
+		console.log('/realtime route hit', req.user.username);
+		var username = req.user.username;
 		var coder = {};
 		var options = {
 			url: 'https://api.github.com/users/',
@@ -33,7 +38,7 @@ module.exports = function (app) {
 				'Authorization': 'token '+ token 
 			}
 		};
-		options.url += req.query.u;
+		options.url += username;
 		// fetch real-time user attr from API, assign to empty coder object
 		api(options)
 		.then(function(response) {
@@ -41,15 +46,15 @@ module.exports = function (app) {
 			coder.followers = parsed.followers;
 			coder.updated_at = parsed.updated_at;
 			coder.repo_count = parsed.public_repos;
-			coder.gh_username = req.query.u;
+			coder.gh_username = username;
 		})
 		// fetch rest of the data from the database
 		.then(function() {
-			new Coder({'gh_username': req.query.u})
+			new Coder({'gh_username': username})
 			.fetch()
 			.then(function(userModel) {
 				if (!userModel) {
-					console.log('User model ' + req.query.u + ' not found');
+					console.log('User model ' + username + ' not found');
 				} else {
 					coder.name = userModel.attributes.name;
 					coder.location = userModel.attributes.location;

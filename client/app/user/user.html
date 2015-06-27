@@ -1,9 +1,9 @@
 <div id='user-container'>
   <div class='username'> 
-    <a href="{{user.url}}">{{user.login}}</a>
+    <a href="{{user.data.url}}">{{user.data.gh_username}}</a>
   </div>
 
-  <img src="{{user.avatar_url}}" class="avatar img-responsive img-circle"></img>
+  <img src="{{user.data.avatar_url}}" class="avatar img-responsive img-circle"></img>
 
 
   <div class='location'>
@@ -14,7 +14,7 @@
     <h2>Languages</h2>
 
     <table class='language table'>
-      <tr class='language-experience' ng-repeat='(key, value) in user.languages'>
+      <tr class='language-experience' ng-repeat='(key, value) in user.data.languages'>
         <td class='language'>
           {{key}}
         </td>
@@ -29,7 +29,7 @@
   <div class='technologies'>
     <h2>Technologies</h2>
     <table class='technologies table'>
-      <tr class='technology-experience' ng-repeat='(key, value) in user.technologies'>
+      <tr class='technology-experience' ng-repeat='(key, value) in user.data.technologies'>
         <td class='technology'>
           {{key}}
         </td>
@@ -44,7 +44,7 @@
   <div class='cred'>
     <h2> Github Cred</h2>
     <table class='cred table'>
-      <tr class='notables' ng-repeat='(key, value) in user.bling'>
+      <tr class='notables' ng-repeat='(key, value) in user.data.cred'>
         <td class='bling'>
           {{key}}
         </td>
