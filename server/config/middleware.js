@@ -36,8 +36,8 @@ module.exports = function (app, express) {
 
   // inject our routers into their respective route file
   require('../users/authRoutes.js')(authRouter);
-  require('../routes/api.js')(apiRouter);
-  // require('../cronjobs/populate.js')();
+  // require('../routes/api.js')(apiRouter);
+  require('../cronjobs/populate.js')();
 
 
 };
