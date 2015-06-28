@@ -28,7 +28,7 @@ module.exports = function (app, express) {
   app.use(passport.session());
 
   app.use('/api', apiRouter);
-  app.use(authRouter); // use user router for all user request
+  app.use(authRouter); 
  
 
   // app.use(helpers.errorLogger);
@@ -36,8 +36,8 @@ module.exports = function (app, express) {
 
   // inject our routers into their respective route file
   require('../users/authRoutes.js')(authRouter);
-  // require('../routes/api.js')(apiRouter);
-  require('../cronjobs/populate.js')();
+  require('../routes/api.js')(apiRouter);
+  // require('../cronjobs/populate.js')();
 
 
 };
