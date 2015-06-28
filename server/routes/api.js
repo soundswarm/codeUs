@@ -55,6 +55,7 @@ module.exports = function (app) {
 							res.status(200).send(coder);
 							helpers.saveToCodersTable(username, scores);
 							helpers.saveToLanguagesTable(scores.languages)  //build out this function
+							helpers.savetoCodersLanguagesTable(username, scores.languages)
 						})
 
 						// .then(function(userModel) {
@@ -75,6 +76,9 @@ module.exports = function (app) {
 					coder.cred.forks = userModel.attributes.forks;
 					coder.cred.watchers_count = userModel.attributes.watchers_count;
 					coder.cred.stargazers_count = userModel.attributes.stargazers_count;
+					//add coder.languages
+
+
 					console.log(coder.cred);
 					coder.name = userModel.attributes.name;
 					coder.location = userModel.attributes.location;

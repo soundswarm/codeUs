@@ -129,9 +129,21 @@ module.exports = api = {
           } 
         })
     })
+  },
+  savetoCodersLanguagesTable: function(username, languages) {
+    new Coder({coder: username}).fetch()
+    .then(function(coder) {
+      if(coder) {
+        _.each(languages, function(bytes, language) { //add way to add bytes to join table
+          //update coder languages.  be careful to not keep appending languages to the list.
+          var languageInst = new Language({
+            coder_id: coder.get('id');
+            //finish code
+          })
+          
+      }
+    })
 
-
-    
   }
   // getScoresAddCoderToDb: function(username) {
   //   return this.getUser(username).promise().bind(this)

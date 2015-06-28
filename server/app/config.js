@@ -83,12 +83,12 @@ db.schema.hasTable('languages').then(function(exists) {
   }
 });
 
-db.schema.hasTable('join_coders_languages').then(function(exists) {
+db.schema.hasTable('coders_languages').then(function(exists) {
   if (!exists) {
-    db.schema.createTable('join_coders_languages', function (language) {
+    db.schema.createTable('coders_languages', function (language) {
       language.increments('id').primary();
-      language.integer('coder_id');
-      language.integer('language_id');
+      language.integer('coder_id').references('coders.id');
+      language.integer('language_id').references('languages.id');
       language.integer('bytes_across_repos');
       language.integer('language_cred');
       language.timestamps();
@@ -124,9 +124,9 @@ db.schema.hasTable('technology_files').then(function(exists) {
   }
 });
 
-db.schema.hasTable('join_coders_technologies').then(function(exists) {
+db.schema.hasTable('coders_technologies').then(function(exists) {
   if (!exists) {
-    db.schema.createTable('join_coders_technologies', function (language) {
+    db.schema.createTable('coders_technologies', function (language) {
       language.increments('id').primary();
       language.integer('coder_id');
       language.integer('technology_id');
