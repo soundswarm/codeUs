@@ -2,7 +2,7 @@ var api = require('request-promise');
 var Coder = require('../app/models/coder');
 var RateLimiter = require('limiter').RateLimiter;
 
-var token = '<<<<<<<<<TOKEN HERE>>>>>>>>>>';
+var token = 'e3b0554a85e3ffd640bdc8942ea9e833d09dc6c6';
 var limiter = new RateLimiter(1, 1100);
 
 var queries = ['followers:>=430', 'followers:260..429', 'followers:190..259', 'followers:155..189', 'followers:131..154', 'followers:115..130', 'followers:103..114', 'followers:93..102', 'followers:85..92', 'followers:78..84', 'followers:72..77', 'followers:67..71', 'followers:63..66', 'followers:60..62', 'followers:57..59', 'followers:54..56', 'followers:52..53', 'followers:50..51', 'followers:48..49', 'followers:46..47', 'followers:45', 'followers:44', 'followers:43', 'followers:42', 'followers:41', 'followers:40', 'followers:39', 'followers:38', 'followers:37', 'followers:36', 'followers:35', 'followers:34', 'followers:33', 'followers:<33+repos:>=300', 'followers:<33+repos:194..299', 'followers:<33+repos:155..193', 'followers:<33+repos:132..154', 'followers:<33+repos:118..131', 'followers:<33+repos:108..117', 'followers:<33+repos:101..107', 'followers:<33+repos:95..100', 'followers:<33+repos:90..94', 'followers:<33+repos:86..89', 'followers:<33+repos:82..85', 'followers:<33+repos:79..81', 'followers:<33+repos:76..78', 'followers:<33+repos:74..75', 'followers:<33+repos:72..73', 'followers:<33+repos:70..71'];

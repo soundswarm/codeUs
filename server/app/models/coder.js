@@ -1,5 +1,7 @@
 var bookshelf = require('../config');
 var Promise = require('bluebird');
+var Language = require('./language');
+
 
 var Coder = bookshelf.Model.extend({
   tableName: 'coders',
@@ -9,6 +11,9 @@ var Coder = bookshelf.Model.extend({
     this.on('creating', function(model, attrs, options) {
       this.populateJoins;
     }, this);
+  },
+  languages: function() {
+    return this.belongsToMany(Language, 'language_id');
   },
 
   populateJoins: function(){
