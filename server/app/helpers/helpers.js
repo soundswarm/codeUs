@@ -136,28 +136,80 @@ module.exports = api = {
     console.log('in savetocoderslanguagestablefunction');
     new Coder({login: username}).fetch()
     .then(function(coder) {
-      console.log('coder, ', coder);
+      // console.log('coder, ', coder);
       if(coder) {
         _.each(languages, function(bytes, language) { //add way to add bytes to join table
           //update coder languages.  be careful to not keep appending languages to the list.
           new Language({name: language}).fetch()
           .then(function(language) {
-            console.log('language: ', language);
+            // console.log('language: ', language);
             if(language) {
-              //destroy all coder records in CodersLanguages collection
-              var coderLanguageInst = new CoderLanguage({
-                coder_id: coder.get('id'),
-                language_id: language.get('id'),
-                bytes_across_repos: bytes
+              
+              // destroy all coder languagen records in CodersLanguages
+              // collectionbefore adding updated languages to the database.
+              // needs testing
+              new CoderLanguage({
+                coder_id: coder.get('id')
               })
-              coderLanguageInst.save()
-              .then(function(coderLanguageInst) {
-                CodersLanguages.add(coderLanguageInst)
+              .fetchAll()
+              .then(function(coderLanguages) {
+                _.each(coderLanguages, function(coderLanguage) {
+                  coderLanguage.destroy;
+                });
+              })
+
+              //save updated coder languages to CodersLanguages
+              .then(function() {
+                var coderLanguageInst = new CoderLanguage({
+                  coder_id: coder.get('id'),
+                  language_id: language.get('id'),
+                  bytes_across_repos: bytes
+                })
+                coderLanguageInst.save()
+                .then(function(coderLanguageInst) {
+                  CodersLanguages.add(coderLanguageInst);
+                })
               })
             }
           })
         })
       }
+    })
+  },
+  getCoderLanguages: function(username) {
+    var languages = {};
+    new Coder({login: username}).fetch()
+    .then(function(coder) {
+      new CoderLanguage({
+        coder_id: coder.id
+      })
+      .fetchAll()
+      .then(function(coderLanguages) {
+        for(var i = 0; i<coderLanguages.models; i++) {
+          langague = coderLanguages.models[i];
+          new Language({id: language.attributes.language_id}).fetch()
+          .then(function(languageName) {
+            var name = languageName.attributes.name;
+            languages[name] = language.attributes.bytes_across_repos;
+            // console.log(languages);
+          })
+        }
+
+
+        _.each(coderLanguages.models, function(language) {
+          
+          new Language({id: language.attributes.language_id}).fetch()
+          .then(function(languageName) {
+            var name = languageName.attributes.name;
+            return languages[name] = language.attributes.bytes_across_repos;
+            // console.log(languages);
+          })
+          .then(function() {
+              console.log('inside helper',languages);
+              // return languages
+          })
+        });
+      })
     })
   }
   // getScoresAddCoderToDb: function(username) {

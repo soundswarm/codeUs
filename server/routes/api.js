@@ -72,11 +72,16 @@ module.exports = function (app) {
 						// 	res.status(200).send(coder);
 						// })
 				} else {
+					coder.languages = {};
+					console.log('outside', helpers.getCoderLanguages(username));
+
+
 					coder.cred = {};
 					coder.cred.forks = userModel.attributes.forks;
 					coder.cred.watchers_count = userModel.attributes.watchers_count;
 					coder.cred.stargazers_count = userModel.attributes.stargazers_count;
-					//add coder.languages
+				  
+
 
 
 					console.log(coder.cred);
