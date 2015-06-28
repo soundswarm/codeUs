@@ -1,8 +1,8 @@
 var bookshelf = require('../config');
-var Coder = require('./language');
+// var Coder = require('./language');
 
-var Language = bookshelf.Model.extend({
-  tableName: 'languages',
+var CoderLanguage = bookshelf.Model.extend({
+  tableName: 'coders_languages',
   hasTimestamps: true,
 
   initialize: function(){
@@ -10,13 +10,13 @@ var Language = bookshelf.Model.extend({
       this.populateJoins;
     }, this);
   },
-  coders: function() {
-    return this.belongsToMany(Coder, 'coder_id');
-  },
+  // coders: function() {
+  //   return this.belongsToMany(Coder, 'coder_id');
+  // },
   populateJoins: function(){
     var userLanguages = {};
     var userTechs = {};
   }
 });
 
-module.exports = Language;
+module.exports = CoderLanguage;

@@ -17,7 +17,7 @@ var helpers = require('../app/helpers/helpers');
 var rp = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
-var token = 'd30257ae0090811432ece3d7565ba088edb74d7b'; // do not upload to GitHub with this token assigned explicitly!
+var token = 'e3b0554a85e3ffd640bdc8942ea9e833d09dc6c6'; // do not upload to GitHub with this token assigned explicitly!
 module.exports = function (app) {
 
 	app.get('/user', authController.ensureAuthenticated, function(req, res, next) {
@@ -54,7 +54,7 @@ module.exports = function (app) {
 			      	_.extend(coder, scores);
 							res.status(200).send(coder);
 							helpers.saveToCodersTable(username, scores);
-							helpers.saveToLanguagesTable(scores.languages)  //build out this function
+							helpers.saveToLanguagesTable(scores.languages);
 							helpers.savetoCodersLanguagesTable(username, scores.languages)
 						})
 

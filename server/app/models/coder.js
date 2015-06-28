@@ -13,7 +13,7 @@ var Coder = bookshelf.Model.extend({
     }, this);
   },
   languages: function() {
-    return this.hasMany(Language, 'language_id');
+    return this.belongsToMany(Language, 'language_id');
   },
 
   populateJoins: function(){

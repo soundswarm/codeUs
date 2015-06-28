@@ -3,11 +3,13 @@ var Coder = require('../models/coder');
 var Coders = require('../collections/coders');
 var Language = require('../models/language');
 var Languages = require('../collections/languages');
+var CoderLanguage = require('../models/coderlanguage');
+var CodersLanguages = require('../collections/coderslanguages');
 
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'd30257ae0090811432ece3d7565ba088edb74d7b';// add one of our tokens 
+var token = 'e3b0554a85e3ffd640bdc8942ea9e833d09dc6c6';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -123,7 +125,7 @@ module.exports = api = {
               .then(function(language) {
                 // add to database
                 Languages.add(language);
-                console.log('new language to db', language);
+                // console.log('new language to db', language);
                 return language;
               })
           } 
@@ -131,19 +133,32 @@ module.exports = api = {
     })
   },
   savetoCodersLanguagesTable: function(username, languages) {
-    new Coder({coder: username}).fetch()
+    console.log('in savetocoderslanguagestablefunction');
+    new Coder({login: username}).fetch()
     .then(function(coder) {
+      console.log('coder, ', coder);
       if(coder) {
         _.each(languages, function(bytes, language) { //add way to add bytes to join table
           //update coder languages.  be careful to not keep appending languages to the list.
-          var languageInst = new Language({
-            coder_id: coder.get('id');
-            //finish code
+          new Language({name: language}).fetch()
+          .then(function(language) {
+            console.log('language: ', language);
+            if(language) {
+              //destroy all coder records in CodersLanguages collection
+              var coderLanguageInst = new CoderLanguage({
+                coder_id: coder.get('id'),
+                language_id: language.get('id'),
+                bytes_across_repos: bytes
+              })
+              coderLanguageInst.save()
+              .then(function(coderLanguageInst) {
+                CodersLanguages.add(coderLanguageInst)
+              })
+            }
           })
-          
+        })
       }
     })
-
   }
   // getScoresAddCoderToDb: function(username) {
   //   return this.getUser(username).promise().bind(this)
