@@ -1,6 +1,9 @@
 // populate a single Coder's profile 
 var Coder = require('../models/coder');
 var Coders = require('../collections/coders');
+var Language = require('../models/language');
+var Languages = require('../collections/languages');
+
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
@@ -101,15 +104,34 @@ module.exports = api = {
     return coder.save()
       .then(function(coder) {
         Coders.add(coder)
-        console.log('new coder added to db', coder);
+        // console.log('new coder added to db', coder);
         return coder;
       })
   },
   saveToLanguagesTable: function(languages) {
     //takes in object of languages
     // loop through languages
-    // if language not in database
-    // add to database
+    _.each(languages, function(bytes, language) { //add way to add bytes to join table
+      var languageInst = new Language({
+        name: language
+      })
+      languageInst.fetch()
+        .then(function(langModel) {
+        // if language not in database
+          if (!langModel) {
+            return languageInst.save()
+              .then(function(language) {
+                // add to database
+                Languages.add(language);
+                console.log('new language to db', language);
+                return language;
+              })
+          } 
+        })
+    })
+
+
+    
   }
   // getScoresAddCoderToDb: function(username) {
   //   return this.getUser(username).promise().bind(this)

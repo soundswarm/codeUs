@@ -54,7 +54,7 @@ module.exports = function (app) {
 			      	_.extend(coder, scores);
 							res.status(200).send(coder);
 							helpers.saveToCodersTable(username, scores);
-							//helpers.saveToLanguagesTable  build out this function
+							helpers.saveToLanguagesTable(scores.languages)  //build out this function
 						})
 
 						// .then(function(userModel) {
