@@ -1,17 +1,17 @@
 <div id='user-container'>
-  <h1>Coders in <strong>{{data.location}}</strong> working primarily in <strong>{{data.primaryLang}}</strong></h1>
+  <h1>Coders in <strong>{{collection[0].location}}</strong> working primarily in <strong>{{collection[0].primary_lang}}</strong></h1>
   <table>
-    <tr ng-repeat="coder in collection">
-      <td><img src="{{coder.data.photo_url}}" /></td>
-      <td>
-          <h2>{{coder.data.name}}</h2>
-          <a href="https://github.com/{{coder.data.login}}"><img src="../assets/octocat_20x20.png" /> {{coder.data.login}}</a>
+    <tr ng-repeat="coder in collection" class="body">
+      <td><img src="{{coder.photo_url}}" width="150" height="150" /></td>
+      <td class="td">
+          <h2>{{coder.name}}</h2>
+          <img src="../app/assets/octocat_20x20.png" /> <a href="https://github.com/{{coder.login}}">{{coder.login}}</a>
           <br/>
-          <img src="../assets/location_20x20.png" /> {{coder.data.location}}
+          <img src="../app/assets/location_20x20.png" /> {{coder.location}}
           <br/>
-          Cred: {{coder.data.cred}} &bull; Stack Overflow reputation: {{coder.data.so_reputation}}
+          Number of public repositories: {{coder.public_repos}} &bull; Stack Overflow reputation: {{coder.so_reputation}}
           <br/>
-          Number of public repositories: {{coder.data.public_repos}} &bull; <iframe src="https://ghbtns.com/github-btn.html?user={{coder.data.login}}&type=follow&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+          Number of followers: {{coder.followers}} &bull; <!-- <iframe src="https://ghbtns.com/github-btn.html?user={{coder.login}}&type=follow&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe> -->
       </td>
     </tr>
 </div>

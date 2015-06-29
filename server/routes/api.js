@@ -22,7 +22,7 @@ var Languages = require('../app/collections/languages');
 var CoderLanguage = require('../app/models/coderlanguage');
 var CodersLanguages = require('../app/collections/coderslanguages');
 
-var token = 'TOKEN HERE'; // do not upload to GitHub with this token assigned explicitly!
+var token = 'd37c94450a7ace1e305d896aa7c5b248fbe355d6'; // do not upload to GitHub with this token assigned explicitly!
 
 var stackOptions = {
 	url: 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=',
@@ -201,20 +201,16 @@ module.exports = function (app) {
 	});
 
 
-	app.get('/related', function(req, res, next) {
-		console.log('hit route api/related for ', req.user.username);
+	app.get('/related', authController.ensureAuthenticated, function(req, res, next) {
 		var username = req.user.username;
 		var locale = req.user._json.location;
-		console.log('locale', locale);
 		var primaryLang;
 		new Coder({login: username}).fetch()
 		.then(function(coder) {
-			console.log('CODER: ', coder);
 			primaryLang = coder.attributes.primary_lang;
-			new Coder({location: locale, primary_lang: primaryLang}).fetchAll()
+			coder.query({where: {location: locale}, andWhere: {primary_lang: primaryLang}}).fetchAll()
 			.then(function(collection) {
-			console.log('collection:', collection);
-			res.status(200).send(coder);
+			res.status(200).send(collection);
 		})	
 		});
 	});

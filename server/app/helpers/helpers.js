@@ -9,7 +9,7 @@ var CodersLanguages = require('../collections/coderslanguages');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'TOKEN HERE';// add one of our tokens 
+var token = 'd37c94450a7ace1e305d896aa7c5b248fbe355d6';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
