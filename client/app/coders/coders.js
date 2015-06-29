@@ -1,8 +1,9 @@
-var mod = angular.module('GitUs.coders', [])
+var mod = angular.module('GitUs.coders', []);
+
 mod.controller('CodersController', function($scope, $http, User) {
   $scope.user = Coders;
 
-  User.getUser(User.url.related)
+  User.getRelated(User.url.related, LANGUAGE, LOCATION)
     .then(function(collection) {
     	console.log(collection);
       $scope.collection = collection; 

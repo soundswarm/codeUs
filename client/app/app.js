@@ -2,6 +2,7 @@ angular.module('GitUs', [
   'GitUs.factories',
   'GitUs.auth',
   'GitUs.user',
+  'GitUs.coders',
   'ui.bootstrap',
   'ui.router'
 
@@ -21,11 +22,17 @@ angular.module('GitUs', [
       url: '/user',
       templateUrl: 'app/user/user.html',
       controller: 'UserController'
+    })
 
+   $stateProvider
+    .state('coders', {
+      url: '/coders',
+      templateUrl: 'app/coders/coders.html',
+      controller: 'CodersController'
     })
 
     // $httpProvider.interceptors.push('AttachTokens');
-})
+});
 // .factory('AttachTokens', function ($window) {
 //   // this is an $httpInterceptor
 //   // its job is to stop all out going request
