@@ -9,7 +9,7 @@ var CodersLanguages = require('../collections/coderslanguages');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'bafd91ccf9861a4e860ab57cf2be2849ed189f78';// add one of our tokens 
+var token = 'b14be7134eb201df873357220c2b48ce299d1fd8';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -174,45 +174,6 @@ module.exports = api = {
           })
         })
       }
-    })
-  },
-  getCoderLanguages: function(username) {
-    var languages = {};
-    return new Coder({login: username}).fetch()
-    .then(function(coder) {
-      return new CoderLanguage({
-        coder_id: coder.id
-      })
-      .fetchAll()
-      .then(function(coderLanguages) {
-        for(var i = 0; i<coderLanguages.models.length; i++) {
-          var language = coderLanguages.models[i];
-          var kilobytes = language.attributes.bytes_across_repos;
-
-          if(i===coderLanguages.models.length-1) {
-            return new Language({id: language.attributes.language_id}).fetch()
-            .then(function(languageName) {
-              var name = languageName.attributes.name;
-              languages[name] = language.attributes.bytes_across_repos;
-              return languages;
-            })
-          }
-          else {
-            var build = function(language, kilobytes) {
-              return new Language({id: language.attributes.language_id}).fetch()
-              .then(function(languageName) {
-                var name = languageName.attributes.name;
-                languages[name] = kilobytes;
-              })
-            }(language, kilobytes)
-          }
-        }
-      })
-      // logs right stuff
-    })
-    .then(function() {
-      console.log('lansdf', languages);
-      languages
     })
   }
   // getScoresAddCoderToDb: function(username) {
