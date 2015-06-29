@@ -10,7 +10,7 @@ var Languages = require('../app/collections/languages');
 var CoderLanguage = require('../app/models/coderlanguage');
 var CodersLanguages = require('../app/collections/coderslanguages');
 
-var token = 'TOKEN HERE';
+var token = 'd37c94450a7ace1e305d896aa7c5b248fbe355d6';
 
 var options = {
 	url: 'https://api.github.com/users/',

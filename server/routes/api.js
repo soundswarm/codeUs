@@ -201,69 +201,22 @@ module.exports = function (app) {
 	});
 
 
-	app.get('/related', authController.ensureAuthenticated, function(req, res, next) {
+	app.get('/related', function(req, res, next) {
 		console.log('hit route api/related for ', req.user.username);
 		var username = req.user.username;
-		var location = req.user.location;
-		var primaryLang = req.user.primary_lang;
-		var collection = [];
-
-		new Coder({'login': username})
-		.fetchAll()
-		.then(function(userModel) {
-			if (!userModel) {
-				helpers.getUser(username).promise().bind(helpers)
-		      .then(helpers.getRepos)
-		      .then(helpers.getReposLanguages)
-		      .then(helpers.reposScores)
-		      .then(function(scores) {
-		      	_.extend(coder, scores);
-						res.status(200).send(coder);
-						helpers.saveToCodersTable(username, scores);
-						helpers.saveToLanguagesTable(scores.languages);
-						helpers.savetoCodersLanguagesTable(username, scores.languages)
-					})
-
-					// .then(function(userModel) {
-					// 	coder.name = userModel.attributes.name;
-					// 	coder.location = userModel.attributes.location;
-					// 	coder.email = userModel.attributes.email;
-					// 	coder.gh_site_url = userModel.attributes.blog;
-					// 	coder.photo_url = userModel.attributes.avatar_url;
-					// 	coder.gh_member_since = userModel.attributes.created_at;
-					// 	coder.so_reputation = userModel.attributes.so_reputation;
-					// 	coder.so_answer_count = userModel.attributes.so_answer_count;
-					// 	coder.so_question_count = userModel.attributes.so_question_count;
-					// 	coder.so_upvote_count = userModel.attributes.so_upvote_count;
-					// 	res.status(200).send(coder);
-					// })
-			} else {
-				coder.languages = {};
-				console.log('outside', helpers.getCoderLanguages(username));
-
-
-				coder.cred = {};
-				coder.cred.forks = userModel.attributes.forks;
-				coder.cred.watchers_count = userModel.attributes.watchers_count;
-				coder.cred.stargazers_count = userModel.attributes.stargazers_count;
-			  
-
-
-
-				console.log(coder.cred);
-				coder.name = userModel.attributes.name;
-				coder.location = userModel.attributes.location;
-				coder.email = userModel.attributes.email;
-				coder.gh_site_url = userModel.attributes.blog;
-				coder.photo_url = userModel.attributes.avatar_url;
-				coder.gh_member_since = userModel.attributes.created_at;
-				coder.so_reputation = userModel.attributes.so_reputation;
-				coder.so_answer_count = userModel.attributes.so_answer_count;
-				coder.so_question_count = userModel.attributes.so_question_count;
-				coder.so_upvote_count = userModel.attributes.so_upvote_count;
-				res.status(200).send(coder);
-			}
+		var locale = req.user._json.location;
+		console.log('locale', locale);
+		var primaryLang;
+		new Coder({login: username}).fetch()
+		.then(function(coder) {
+			console.log('CODER: ', coder);
+			primaryLang = coder.attributes.primary_lang;
+			new Coder({location: locale, primary_lang: primaryLang}).fetchAll()
+			.then(function(collection) {
+			console.log('collection:', collection);
+			res.status(200).send(coder);
+		})	
 		});
 	});
-	
+
 };

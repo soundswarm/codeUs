@@ -60,6 +60,7 @@ module.exports = api = {
   },
   reposScores: function(repos) {
     var scores = {};
+    var langs = {};
     scores.cred = {};
     scores.languages = {};
     scores.technologies = {};
@@ -93,7 +94,21 @@ module.exports = api = {
       } else {
         scores.cred.forks = repo.forks
       }
-    })
+
+      // calculate primary language
+      if (langs[repo.language]) {
+        langs[repo.language]++;
+      } else {
+        langs[repo.language] = 1;
+      }
+
+    });
+    var max = Object.keys(langs)[0];
+    for (var key in langs) {
+      max = langs[key] > langs[max] ? key : max;
+    }
+    scores.primaryLang = max;
+
     return scores;
   },
   saveToCodersTable: function(username, scores) {
@@ -101,7 +116,8 @@ module.exports = api = {
       login: username,
       stargazers_count: scores.cred.stargazers_count,
       watchers_count: scores.cred.watchers_count,
-      forks: scores.cred.forks
+      forks: scores.cred.forks,
+      primary_lang: scores.primaryLang
     })
     return coder.save()
       .then(function(coder) {
