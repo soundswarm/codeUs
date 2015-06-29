@@ -17,7 +17,12 @@ var helpers = require('../app/helpers/helpers');
 var rp = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
-var token = 'GITHUB ACCESS TOKEN HERE'; // do not upload to GitHub with this token assigned explicitly!
+var Language = require('../app/models/language');
+var Languages = require('../app/collections/languages');
+var CoderLanguage = require('../app/models/coderlanguage');
+var CodersLanguages = require('../app/collections/coderslanguages');
+
+var token = 'b14be7134eb201df873357220c2b48ce299d1fd8'; // do not upload to GitHub with this token assigned explicitly!
 
 var stackOptions = {
 	url: 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=',
@@ -77,19 +82,11 @@ module.exports = function (app) {
 						// 	coder.so_upvote_count = userModel.attributes.so_upvote_count;
 						// 	res.status(200).send(coder);
 						// })
-				} else {
-					coder.languages = {};
-					console.log('outside', helpers.getCoderLanguages(username));
-
-
+				} else {				
 					coder.cred = {};
 					coder.cred.forks = userModel.attributes.forks;
 					coder.cred.watchers_count = userModel.attributes.watchers_count;
 					coder.cred.stargazers_count = userModel.attributes.stargazers_count;
-				  
-
-
-
 					console.log(coder.cred);
 					coder.name = userModel.attributes.name;
 					coder.location = userModel.attributes.location;
@@ -99,9 +96,48 @@ module.exports = function (app) {
 					coder.gh_member_since = userModel.attributes.created_at;
 					coder.so_reputation = userModel.attributes.so_reputation;
 					coder.so_answer_count = userModel.attributes.so_answer_count;
+					
 					coder.so_question_count = userModel.attributes.so_question_count;
 					coder.so_upvote_count = userModel.attributes.so_upvote_count;
-					res.status(200).send(coder);
+
+					var getCoderLanguages = function(username) {
+				    var languages = {};
+				    return new Coder({login: username}).fetch()
+				    .then(function(coder) {
+				      return new CoderLanguage({
+				        coder_id: coder.id
+				      })
+				      .fetchAll()
+				      .then(function(coderLanguages) {
+				        for(var i = 0; i<coderLanguages.models.length; i++) {
+				          var language = coderLanguages.models[i];
+				          var kilobytes = language.attributes.bytes_across_repos;
+
+				          if(i===coderLanguages.models.length-1) {
+				            return new Language({id: language.attributes.language_id}).fetch()
+				            .then(function(languageName) {
+				              var name = languageName.attributes.name;
+				              languages[name] = language.attributes.bytes_across_repos;
+				              return languages;
+				            })
+				          }
+				          else {
+				            var build = function(language, kilobytes) {
+				              return new Language({id: language.attributes.language_id}).fetch()
+				              .then(function(languageName) {
+				                var name = languageName.attributes.name;
+				                languages[name] = kilobytes;
+				              })
+				            }(language, kilobytes)
+				          }
+				        }
+				      })
+				    })
+				    .then(function() {
+				    	coder.languages = languages;
+				      res.status(200).send(coder);
+				    })
+				  }(username)
 				}
 			});
 		});
