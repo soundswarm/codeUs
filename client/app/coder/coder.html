@@ -1,0 +1,63 @@
+<div id='user-container'>
+  <div class='username'> 
+   <img src="{{coder.data.avatar_url}}" class="avatar img-responsive"></img>
+    <h1>{{coder.data.login}}</h1>
+  </div>
+
+ 
+
+
+  <div class='location'>
+    {{user.location}}
+  </div>
+
+  <div class='languages'>
+    <h2>Languages</h2>
+
+    <table class='language table'>
+      <tr class='language-experience' ng-repeat='(key, value) in coder.data.languages'>
+        <td class='language'>
+          {{key}}
+        </td>
+        <td class='bytes'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
+  </div>
+
+  <div class='technologies'>
+    <h2>Technologies</h2>
+    <table class='technologies table'>
+      <tr class='technology-experience' ng-repeat='(key, value) in coder.data.technologies'>
+        <td class='technology'>
+          {{key}}
+        </td>
+        <td class='bytes'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
+  </div>
+
+  <div class='cred'>
+    <h2> Github Cred</h2>
+    <table class='cred table'>
+      <tr class='notables' ng-repeat='(key, value) in coder.data.cred'>
+        <td class='cred'>
+          {{key}}
+        </td>
+        <td class='count'>
+          {{value}}
+        </td>
+
+      </tr>
+    </table>
+
+  </div>
+
+  
+
+</div>

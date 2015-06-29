@@ -1,6 +1,7 @@
 body {
   margin-top: 10%;
   margin-left: 10%;
+  margin-top: 10%;
 }
 
 #banner
@@ -9,8 +10,11 @@ body {
    margin-top: 0.2em;
 }
 .avatar {
-  height: 50px;
-  width: 50px;
+  height: 150px;
+  width: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .button-block, .signin {
   width: 200px;
