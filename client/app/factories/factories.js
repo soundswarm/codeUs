@@ -24,7 +24,8 @@ mod.factory('User', function($http) {
     // },
     url: {
       root: 'http://127.0.0.1:8000',
-      self: 'http://127.0.0.1:8000'+'/api/user'
+      self: 'http://127.0.0.1:8000'+'/api/user',
+      related: 'http://127.0.0.1:8000' + '/api/related'
       // user: 'http://127.0.0.1:8000'+'/api/user/',
     },
     getUser: function(userUrl) {
@@ -34,7 +35,17 @@ mod.factory('User', function($http) {
           return user;
         })
         .catch(function(err){
-          console.log(err)
+          console.log(err);
+        })
+    },
+    getRelated: function(relatedUrl, primaryLang, loc) {
+      var fullUrl = relatedUrl + '?language=' + primaryLang + '&location=' + loc;
+      return $http.get(fullUrl)
+        .then(function(array) {
+          return array;
+        })
+        .catch(function(err) {
+          console.log(err);
         })
     }
   }
