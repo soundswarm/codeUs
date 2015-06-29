@@ -17,7 +17,13 @@ var helpers = require('../app/helpers/helpers');
 var rp = require('request-promise');
 var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
-var token = 'e3b0554a85e3ffd640bdc8942ea9e833d09dc6c6'; // do not upload to GitHub with this token assigned explicitly!
+var token = 'GITHUB ACCESS TOKEN HERE'; // do not upload to GitHub with this token assigned explicitly!
+
+var stackOptions = {
+	url: 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=',
+	gzip: true
+};
+
 module.exports = function (app) {
 
 	app.get('/user', authController.ensureAuthenticated, function(req, res, next) {
@@ -101,50 +107,61 @@ module.exports = function (app) {
 		});
 	});
 
-	app.get('/addsodata', function(req, res, next) {
-		// console.log('/addsodata route hit');
-		var pageNumber = 1;
-		var hasMore = true;
-		var quotaRemain = 10;
-		var options = {
-			url: 'https://api.stackexchange.com/2.2/users?pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=' + pageNumber,
-			gzip: true
+	// takes in Stack Overflow coder object, stores relevant records in coder model with same name
+	var addSODataToDB = function(socoder) {
+		new Coder({login: socoder.display_name}).fetch()
+				.then(function(coder) {
+					if (coder) {
+		      	coder.save({
+							so_location: socoder.location,
+							so_name: socoder.display_name,
+    					so_member_since: socoder.creation_date,
+    					so_reputation: socoder.reputation,
+    					so_answer_count: socoder.answer_count,
+    					so_question_count: socoder.question_count,
+    					so_upvote_count: socoder.up_vote_count,
+    					so_site_url: socoder.website_url
+		      	});
+		      	console.log('User ' + socoder.display_name + ' updated with SO stats.');
+					}
+			})
 		};
-		// while (quotaRemain > 5 && hasMore === true) {
-			// console.log('/addsodata while loop entered');
-			// console.log('link', options.url);
-			rp(options)
-			.then(function(response) {
-				// console.log('response', response);
-				var parsed = JSON.parse(response);
-				// console.log('parsed', parsed);
-				pageNumber++;
-				hasMore = parsed.has_more;
-				// console.log('parsed.has_more', parsed.has_more);
-				quotaRemain = parsed.quota_remaining;
-				// console.log('parsed.quota_remaining', parsed.quota_remaining);
-				parsed.items.forEach(function(user, i, items) {
-					// console.log('index', i, 'user', user);
-					new Coder({'name': user.display_name}).fetch()
-					.then(function(userModel) {
-						if (!userModel) {
-							// console.log('No user named ' + user.display_name + ' among GH users in DB.');
-						} else {
-							userModel.save({
-								so_location: user.location,
-								so_name: user.display_name,
-      					so_member_since: user.creation_date,
-      					so_reputation: user.reputation,
-      					so_answer_count: user.answer_count,
-      					so_question_count: user.question_count,
-      					so_upvote_count: user.up_vote_count,
-      					so_site_url: user.website_url
-							});
-						}
-					});
-				});
-			});
-		// }
-	});
 
+	// iterates through list of up to 100 entries in items object, calling addSODataToDB for each
+	var getSODataAndSave = function(i, items, callback) {
+		if (i >= items.length) {
+	    callback();
+	    return;
+	  }
+    addSODataToDB(items[i]);
+    getSODataAndSave(i+1, items, callback);
+	};
+
+	// endpoint for adding Stack Overflow attributes to existing coder models in DB
+	app.get('/addsodata', function(req, res, next) {
+		var addSO = function(pg) {
+			stackOptions.url = 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=' + pg;
+			
+			rp(stackOptions)
+				.then(function(response) {
+					var parsed = JSON.parse(response);
+					hasMore = parsed.has_more;
+					quotaRemain = parsed.quota_remaining;
+					var items = parsed.items;
+					var backoff = parsed.backoff || 0;
+					console.log('backoff: ', backoff);
+					getSODataAndSave(0, items, function() {
+						pg++;
+						if (hasMore === false || quotaRemain < 5) { return; }
+						console.log('backoff within callback: ', backoff);
+						setTimeout(function() {
+							addSO(pg);
+						}, backoff * 1000);
+					});		
+			})
+			.catch(console.error);
+		};
+		addSO(1);
+	});
+	
 };
