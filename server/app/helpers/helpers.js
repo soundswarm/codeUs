@@ -9,7 +9,7 @@ var CodersLanguages = require('../collections/coderslanguages');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'b14be7134eb201df873357220c2b48ce299d1fd8';// add one of our tokens 
+var token = '3f8e281b61ddd760d9727f4d973b53b5e59fd46a';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -60,6 +60,7 @@ module.exports = api = {
   },
   reposScores: function(repos) {
     var scores = {};
+    var langs = {};
     scores.cred = {};
     scores.languages = {};
     scores.technologies = {};
@@ -93,7 +94,21 @@ module.exports = api = {
       } else {
         scores.cred.forks = repo.forks
       }
-    })
+
+      // calculate primary language
+      if (langs[repo.language]) {
+        langs[repo.language]++;
+      } else {
+        langs[repo.language] = 1;
+      }
+
+    });
+    var max = Object.keys(langs)[0];
+    for (var key in langs) {
+      max = langs[key] > langs[max] ? key : max;
+    }
+    scores.primaryLang = max;
+
     return scores;
   },
   saveToCodersTable: function(username, scores) {
@@ -101,7 +116,8 @@ module.exports = api = {
       login: username,
       stargazers_count: scores.cred.stargazers_count,
       watchers_count: scores.cred.watchers_count,
-      forks: scores.cred.forks
+      forks: scores.cred.forks,
+      primary_lang: scores.primaryLang
     })
     return coder.save()
       .then(function(coder) {
@@ -145,7 +161,7 @@ module.exports = api = {
             // console.log('language: ', language);
             if(language) {
               
-              // destroy all coder languagen records in CodersLanguages
+              // destroy all coder language records in CodersLanguages
               // collectionbefore adding updated languages to the database.
               // needs testing
               new CoderLanguage({

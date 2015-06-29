@@ -21,8 +21,9 @@ var Language = require('../app/models/language');
 var Languages = require('../app/collections/languages');
 var CoderLanguage = require('../app/models/coderlanguage');
 var CodersLanguages = require('../app/collections/coderslanguages');
+var url = require('url');
 
-var token = 'b14be7134eb201df873357220c2b48ce299d1fd8'; // do not upload to GitHub with this token assigned explicitly!
+var token = '3f8e281b61ddd760d9727f4d973b53b5e59fd46a'; // do not upload to GitHub with this token assigned explicitly!
 
 var stackOptions = {
 	url: 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=',
@@ -32,6 +33,7 @@ var stackOptions = {
 module.exports = function (app) {
 
 	app.get('/user', authController.ensureAuthenticated, function(req, res, next) {
+		console.log('request object: ', req);
 		console.log('hit route api/user', req.user.username);
 		var username = req.user.username;
 		var coder = {};
@@ -199,5 +201,20 @@ module.exports = function (app) {
 		};
 		addSO(1);
 	});
-	
+
+
+	app.get('/related', authController.ensureAuthenticated, function(req, res, next) {
+		var username = req.user.username;
+		var locale = req.user._json.location;
+		var primaryLang;
+		new Coder({login: username}).fetch()
+		.then(function(coder) {
+			primaryLang = coder.attributes.primary_lang;
+			coder.query({where: {location: locale}, andWhere: {primary_lang: primaryLang}}).fetchAll()
+			.then(function(collection) {
+			res.status(200).send(collection);
+		})	
+		});
+	});
+
 };

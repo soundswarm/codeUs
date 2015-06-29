@@ -38,9 +38,8 @@ mod.factory('User', function($http) {
           console.log(err);
         })
     },
-    getRelated: function(relatedUrl, primaryLang, loc) {
-      var fullUrl = relatedUrl + '?language=' + primaryLang + '&location=' + loc;
-      return $http.get(fullUrl)
+    getRelated: function(relatedUrl) {
+      return $http.get(relatedUrl)
         .then(function(array) {
           return array;
         })
