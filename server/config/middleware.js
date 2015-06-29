@@ -38,6 +38,6 @@ module.exports = function (app, express) {
   require('../users/authRoutes.js')(authRouter);
   require('../routes/api.js')(apiRouter);
   // require('../cronjobs/populate.js')();
-
+  require('../cronjobs/credlang.js')();
 
 };

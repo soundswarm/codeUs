@@ -22,7 +22,7 @@ var Languages = require('../app/collections/languages');
 var CoderLanguage = require('../app/models/coderlanguage');
 var CodersLanguages = require('../app/collections/coderslanguages');
 
-var token = 'b14be7134eb201df873357220c2b48ce299d1fd8'; // do not upload to GitHub with this token assigned explicitly!
+var token = 'TOKEN HERE'; // do not upload to GitHub with this token assigned explicitly!
 
 var stackOptions = {
 	url: 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=',
@@ -198,6 +198,72 @@ module.exports = function (app) {
 			.catch(console.error);
 		};
 		addSO(1);
+	});
+
+
+	app.get('/related', authController.ensureAuthenticated, function(req, res, next) {
+		console.log('hit route api/related for ', req.user.username);
+		var username = req.user.username;
+		var location = req.user.location;
+		var primaryLang = req.user.primary_lang;
+		var collection = [];
+
+		new Coder({'login': username})
+		.fetchAll()
+		.then(function(userModel) {
+			if (!userModel) {
+				helpers.getUser(username).promise().bind(helpers)
+		      .then(helpers.getRepos)
+		      .then(helpers.getReposLanguages)
+		      .then(helpers.reposScores)
+		      .then(function(scores) {
+		      	_.extend(coder, scores);
+						res.status(200).send(coder);
+						helpers.saveToCodersTable(username, scores);
+						helpers.saveToLanguagesTable(scores.languages);
+						helpers.savetoCodersLanguagesTable(username, scores.languages)
+					})
+
+					// .then(function(userModel) {
+					// 	coder.name = userModel.attributes.name;
+					// 	coder.location = userModel.attributes.location;
+					// 	coder.email = userModel.attributes.email;
+					// 	coder.gh_site_url = userModel.attributes.blog;
+					// 	coder.photo_url = userModel.attributes.avatar_url;
+					// 	coder.gh_member_since = userModel.attributes.created_at;
+					// 	coder.so_reputation = userModel.attributes.so_reputation;
+					// 	coder.so_answer_count = userModel.attributes.so_answer_count;
+					// 	coder.so_question_count = userModel.attributes.so_question_count;
+					// 	coder.so_upvote_count = userModel.attributes.so_upvote_count;
+					// 	res.status(200).send(coder);
+					// })
+			} else {
+				coder.languages = {};
+				console.log('outside', helpers.getCoderLanguages(username));
+
+
+				coder.cred = {};
+				coder.cred.forks = userModel.attributes.forks;
+				coder.cred.watchers_count = userModel.attributes.watchers_count;
+				coder.cred.stargazers_count = userModel.attributes.stargazers_count;
+			  
+
+
+
+				console.log(coder.cred);
+				coder.name = userModel.attributes.name;
+				coder.location = userModel.attributes.location;
+				coder.email = userModel.attributes.email;
+				coder.gh_site_url = userModel.attributes.blog;
+				coder.photo_url = userModel.attributes.avatar_url;
+				coder.gh_member_since = userModel.attributes.created_at;
+				coder.so_reputation = userModel.attributes.so_reputation;
+				coder.so_answer_count = userModel.attributes.so_answer_count;
+				coder.so_question_count = userModel.attributes.so_question_count;
+				coder.so_upvote_count = userModel.attributes.so_upvote_count;
+				res.status(200).send(coder);
+			}
+		});
 	});
 	
 };

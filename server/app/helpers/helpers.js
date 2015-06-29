@@ -9,7 +9,7 @@ var CodersLanguages = require('../collections/coderslanguages');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'b14be7134eb201df873357220c2b48ce299d1fd8';// add one of our tokens 
+var token = 'TOKEN HERE';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -145,7 +145,7 @@ module.exports = api = {
             // console.log('language: ', language);
             if(language) {
               
-              // destroy all coder languagen records in CodersLanguages
+              // destroy all coder language records in CodersLanguages
               // collectionbefore adding updated languages to the database.
               // needs testing
               new CoderLanguage({
