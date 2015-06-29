@@ -12,6 +12,7 @@ module.exports = function (app, express) {
   // Express 4 allows us to use multiple routers with their own configurations
   var authRouter = express.Router();
   var apiRouter = express.Router();
+  var coderRouter = express.Router();
 
 
   app.use(morgan('dev'));
@@ -28,6 +29,7 @@ module.exports = function (app, express) {
   app.use(passport.session());
 
   app.use('/api', apiRouter);
+  app.use('/coder', coderRouter);
   app.use(authRouter); 
  
 
@@ -37,6 +39,7 @@ module.exports = function (app, express) {
   // inject our routers into their respective route file
   require('../users/authRoutes.js')(authRouter);
   require('../routes/api.js')(apiRouter);
+  require('../routes/coder.js')(coderRouter);
   // require('../cronjobs/populate.js')();
   // require('../cronjobs/credlang.js')();
 

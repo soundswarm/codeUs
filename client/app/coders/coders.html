@@ -2,16 +2,16 @@
   <h1><strong>{{length}}</strong> coders in <strong>{{collection[0].location}}</strong> working primarily in <strong>{{collection[0].primary_lang}}</strong></h1>
   <table>
     <tr ng-repeat="coder in collection" class="body">
-      <td><a href=""><img src="{{coder.photo_url}}" width="150" height="150" /></a></td>
+      <td><a href="/#/coder/{{coder.login}}"><img src="{{coder.photo_url}}" width="150" height="150" /></a></td>
       <td class="td">
-          <h2>{{coder.name}}</h2>
+          <h2><a href="/#/coder/{{coder.login}}">{{coder.name}}</a></h2>
           <img src="../app/assets/octocat_20x20.png" /> <a href="https://github.com/{{coder.login}}">{{coder.login}}</a>
           <br/>
           <img src="../app/assets/location_20x20.png" /> {{coder.location}}
           <br/>
           Number of public repositories: {{coder.public_repos}} &bull; Stack Overflow reputation: {{coder.so_reputation}}
           <br/>
-          Number of followers: {{coder.followers}} &bull; <!-- <iframe src="https://ghbtns.com/github-btn.html?user={{coder.login}}&type=follow&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe> -->
+          Number of followers: {{coder.followers}} &bull; <!-- <iframe src="{{getIframeURL(coder)}}"></iframe> -->
       </td>
     </tr>
 </div>
