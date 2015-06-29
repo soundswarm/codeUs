@@ -9,7 +9,7 @@ var CodersLanguages = require('../collections/coderslanguages');
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = 'e3b0554a85e3ffd640bdc8942ea9e833d09dc6c6';// add one of our tokens 
+var token = 'bafd91ccf9861a4e860ab57cf2be2849ed189f78';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -178,38 +178,41 @@ module.exports = api = {
   },
   getCoderLanguages: function(username) {
     var languages = {};
-    new Coder({login: username}).fetch()
+    return new Coder({login: username}).fetch()
     .then(function(coder) {
-      new CoderLanguage({
+      return new CoderLanguage({
         coder_id: coder.id
       })
       .fetchAll()
       .then(function(coderLanguages) {
-        for(var i = 0; i<coderLanguages.models; i++) {
-          langague = coderLanguages.models[i];
-          new Language({id: language.attributes.language_id}).fetch()
-          .then(function(languageName) {
-            var name = languageName.attributes.name;
-            languages[name] = language.attributes.bytes_across_repos;
-            // console.log(languages);
-          })
+        for(var i = 0; i<coderLanguages.models.length; i++) {
+          var language = coderLanguages.models[i];
+          var kilobytes = language.attributes.bytes_across_repos;
+
+          if(i===coderLanguages.models.length-1) {
+            return new Language({id: language.attributes.language_id}).fetch()
+            .then(function(languageName) {
+              var name = languageName.attributes.name;
+              languages[name] = language.attributes.bytes_across_repos;
+              return languages;
+            })
+          }
+          else {
+            var build = function(language, kilobytes) {
+              return new Language({id: language.attributes.language_id}).fetch()
+              .then(function(languageName) {
+                var name = languageName.attributes.name;
+                languages[name] = kilobytes;
+              })
+            }(language, kilobytes)
+          }
         }
-
-
-        _.each(coderLanguages.models, function(language) {
-          
-          new Language({id: language.attributes.language_id}).fetch()
-          .then(function(languageName) {
-            var name = languageName.attributes.name;
-            return languages[name] = language.attributes.bytes_across_repos;
-            // console.log(languages);
-          })
-          .then(function() {
-              console.log('inside helper',languages);
-              // return languages
-          })
-        });
       })
+      // logs right stuff
+    })
+    .then(function() {
+      console.log('lansdf', languages);
+      languages
     })
   }
   // getScoresAddCoderToDb: function(username) {
