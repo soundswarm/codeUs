@@ -1,8 +1,8 @@
 <div id='user-container'>
-  <h1>Coders in <strong>{{collection[0].location}}</strong> working primarily in <strong>{{collection[0].primary_lang}}</strong></h1>
+  <h1><strong>{{length}}</strong> coders in <strong>{{collection[0].location}}</strong> working primarily in <strong>{{collection[0].primary_lang}}</strong></h1>
   <table>
     <tr ng-repeat="coder in collection" class="body">
-      <td><img src="{{coder.photo_url}}" width="150" height="150" /></td>
+      <td><a href=""><img src="{{coder.photo_url}}" width="150" height="150" /></a></td>
       <td class="td">
           <h2>{{coder.name}}</h2>
           <img src="../app/assets/octocat_20x20.png" /> <a href="https://github.com/{{coder.login}}">{{coder.login}}</a>
