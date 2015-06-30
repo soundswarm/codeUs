@@ -3,13 +3,17 @@ var Coder = require('../models/coder');
 var Coders = require('../collections/coders');
 var Language = require('../models/language');
 var Languages = require('../collections/languages');
+var Technology = require('../models/technology');
+var Technologies = require('../collections/technologies');
 var CoderLanguage = require('../models/coderlanguage');
 var CodersLanguages = require('../collections/coderslanguages');
+var CoderTechnology = require('../models/codertechnology');
+var CodersTechnologies = require('../collections/coderstechnologies');
 
 var rp = require('request-promise');
 var bb = require('bluebird');
 var _ = require('underscore');
-var token = '431a18f6f7e3371a157019a522d320e939eac28c';// add one of our tokens 
+var token = '1ce7e4e705d292beda12fb0a2ef4c39ef780c2e7';// add one of our tokens 
                                                        // do not push this file with token
                                                        // to GitHub!
 module.exports = api = {
@@ -55,8 +59,27 @@ module.exports = api = {
         return repos;
       })
   },
-  getReposTechnologies: function(repos) {
-
+  getReposTechnologies: function(username, repos, technology, languageName) {
+    // this.options.url = 'https://api.github.com/search/code?q=jquery.min js+in:path+language:js+repo:soundswarm/CodeUsMVP';
+    // language = 'js';
+    technology = technology || {};
+    // technology.name = 'jquery';
+    languageName = 'JavaScript';
+    this.options.url = 'https://api.github.com/search/code?q='+technology.name+'+filename:'+technology.name+'+language:js+user:'+username;
+    console.log(this.options.url)
+    return rp(this.options)
+    .then(function(searchResult) {
+      _.each(searchResult.items, function(item) {
+        repoResult = item.repository.name;
+        _.each(repos, function(repo) {
+          if(repo.name === repoResult) {
+            repo.technologies = repo.technologies || {};
+            repo.technologies[technology.name] = repo.languages[languageName];
+          }
+        })
+      })
+      return repos;
+    })
   },
   reposScores: function(repos) {
     var scores = {};
@@ -72,6 +95,15 @@ module.exports = api = {
           scores.languages[language] += Math.round(kilobytes/1000);
         } else {
           scores.languages[language] = Math.round(kilobytes/1000);
+        }
+      })
+
+      //calculate technologies
+      _.each(repo.technologies, function(kilobytes, technology) {
+        if(scores.technologies[technology]) {
+          scores.technologies[technology] += Math.round(kilobytes/1000);
+        } else {
+          scores.technologies[technology] = Math.round(kilobytes/1000);
         }
       })
 
@@ -148,6 +180,28 @@ module.exports = api = {
         })
     })
   },
+  saveToTechnologiesTable: function(technologies) {
+    //takes in object of languages
+    // loop through languages
+    _.each(technologies, function(bytes, technology) { //add way to add bytes to join table
+      var technologyInst = new Technology({
+        name: technology
+      })
+      technologyInst.fetch()
+        .then(function(techModel) {
+        // if language not in database
+          if (!techModel) {
+            return technologyInst.save()
+              .then(function(technology) {
+                // add to database
+                Languages.add(technology);
+                // console.log('new language to db', language);
+                return technology;
+              })
+          } 
+        })
+    })
+  },
   savetoCodersLanguagesTable: function(username, languages) {
     console.log('in savetocoderslanguagestablefunction');
     new Coder({login: username}).fetch()
@@ -191,8 +245,52 @@ module.exports = api = {
         })
       }
     })
+  },
+  savetoCodersTechnologiesTable: function(username, technologies) {
+    console.log('in savetocoderstechnologiestablefunction');
+    new Coder({login: username}).fetch()
+    .then(function(coder) {
+      if(coder) {
+        console.log(technologies);
+        _.each(technologies, function(bytes, technology) { 
+          new Technology({name: technology}).fetch()
+          .then(function(technology) {
+            // console.log('technology: ', technology);
+            if(technology) {
+              
+              // destroy all coder language records in CodersTechnologies
+              // collectionbefore adding updated languages to the database.
+              // needs testing
+              new CoderTechnology({
+                coder_id: coder.get('id')
+              })
+              .fetchAll()
+              .then(function(coderTechnologies) {
+                _.each(coderTechnologies, function(coderTechnology) {
+                  coderTechnology.destroy;
+                });
+              })
+
+              //save updated coder technologies to CodersTechnologies
+              .then(function() {
+                var coderTechnologyInst = new CoderTechnology({
+                  coder_id: coder.get('id'),
+                  technology_id: technology.get('id'),
+                  bytes_across_repos: bytes
+                })
+
+                coderTechnologyInst.save()
+                .then(function(coderTechnologyInst) {
+                  CodersTechnologies.add(coderTechnologyInst);
+                })
+              })
+            }
+          })
+        })
+      }
+    })
   }
-  // getScoresAddCoderToDb: function(username) {
+   // getScoresAddCoderToDb: function(username) {
   //   return this.getUser(username).promise().bind(this)
   //     .then(this.getRepos)
   //     .then(this.getReposLanguages)

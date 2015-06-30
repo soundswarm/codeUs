@@ -34,7 +34,7 @@ db.schema.hasTable('coders').then(function(exists) {
       coder.string('email', 255);
       // tier 2 attributes below
       coder.integer('collab_count');
-      coder.string('commit_pattern', 255);
+      coder.string('primary_lang', 255);
       coder.integer('collab_per_repo');
       coder.integer('contrib_count');
       coder.string('commit_day_pattern', 255);

@@ -1,8 +1,8 @@
 var bookshelf = require('../config');
 var Coder = require('./coder');
 
-var Language = bookshelf.Model.extend({
-  tableName: 'languages',
+var Technology = bookshelf.Model.extend({
+  tableName: 'technologies',
   hasTimestamps: true,
 
   coders: function() {
@@ -10,4 +10,4 @@ var Language = bookshelf.Model.extend({
   }
 });
 
-module.exports = Language;
+module.exports = Technology;

@@ -12,6 +12,7 @@
 				// send scores to client
 				// put scores in db
 var _ = require('underscore');
+var bb = require('bluebird');
 var authController = require('../users/authController.js');
 var helpers = require('../app/helpers/helpers');
 var rp = require('request-promise');
@@ -19,10 +20,14 @@ var Coder = require('../app/models/coder');
 var Coders = require('../app/collections/coders');
 var Language = require('../app/models/language');
 var Languages = require('../app/collections/languages');
+var Technology = require('../app/models/technology');
+var Technologies = require('../app/collections/technologies');
 var CoderLanguage = require('../app/models/coderlanguage');
 var CodersLanguages = require('../app/collections/coderslanguages');
+var CoderTechnology = require('../app/models/codertechnology');
+var CodersTechnologies = require('../app/collections/coderstechnologies');
 
-var token = '431a18f6f7e3371a157019a522d320e939eac28c'; // do not upload to GitHub with this token assigned explicitly!
+var token = '1ce7e4e705d292beda12fb0a2ef4c39ef780c2e7'; // do not upload to GitHub with this token assigned explicitly!
 
 var stackOptions = {
 	url: 'https://api.stackexchange.com/2.2/users?key=TKQV9fx1oXQhozGO*SGQNA((&access_token=saN8CDoS7M8lbHLZj(mC2w))&pagesize=100&order=desc&sort=reputation&site=stackoverflow&filter=!Ln4IB)_.hsRjrBGzKe*i*W&page=',
@@ -63,13 +68,44 @@ module.exports = function (app) {
 					helpers.getUser(username).promise().bind(helpers)
 			      .then(helpers.getRepos)
 			      .then(helpers.getReposLanguages)
+			      .then(function(repos) {
+			      	var technologies = [
+					      {
+					        name: 'angular', 
+					        file: 'angular', 
+					      }, 
+					      {
+					        name: 'express', 
+					        file: 'express', 
+					      },
+					      {
+					        name: 'jquery', 
+					        file: 'jquery', 
+					      },
+					      {
+					      	name: 'mongodb',
+					      	file: 'mongodb'
+					    	}
+					    ];
+			      	var promises =[];
+					    for(var i = 0; i<technologies.length; i++) {
+					      var technology = technologies[i];
+					      promises.push(helpers.getReposTechnologies(username, repos, technology))
+					    }
+					    return bb.all(promises).then(function() {
+					      // console.log(repos);
+					      return repos;
+					    })
+			      })
 			      .then(helpers.reposScores)
 			      .then(function(scores) {
 			      	_.extend(coder, scores);
 							res.status(200).send(coder);
 							helpers.saveToCodersTable(username, scores);
 							helpers.saveToLanguagesTable(scores.languages);
+							helpers.saveToTechnologiesTable(scores.technologies);
 							helpers.savetoCodersLanguagesTable(username, scores.languages)
+							helpers.savetoCodersTechnologiesTable(username, scores.technologies)
 						})
 
 						// .then(function(userModel) {
@@ -138,7 +174,45 @@ module.exports = function (app) {
 				    })
 				    .then(function() {
 				    	coder.languages = languages;
-				      res.status(200).send(coder);
+				    	var getCoderTechnologies = function(username) {
+						    var technologies = {};
+						    return new Coder({login: username}).fetch()
+						    .then(function(coder) {
+						      return new CoderTechnology({
+						        coder_id: coder.id
+						      })
+						      .fetchAll()
+						      .then(function(coderTechnologies) {
+						        for(var i = 0; i<coderTechnologies.models.length; i++) {
+						          var technology = coderTechnologies.models[i];
+						          var kilobytes = technology.attributes.bytes_across_repos;
+
+						          if(i===coderTechnologies.models.length-1) {
+						            return new Technology({id: technology.attributes.technology_id}).fetch()
+						            .then(function(technologyName) {
+						              var name = technologyName.attributes.name;
+						              technologies[name] = technology.attributes.bytes_across_repos;
+						              return technologies;
+						            })
+						          }
+						          else {
+						            var build = function(technology, kilobytes) {
+						            	console.log('technology', technology);
+						              return new Technology({id: technology.attributes.technology_id}).fetch()
+						              .then(function(technologyName) {
+						                var name = technologyName.attributes.name;
+						                technologies[name] = kilobytes;
+						              })
+						            }(technology, kilobytes)
+						          }
+						        }
+						      })
+						    })
+						    .then(function() {
+						    	coder.technologies = technologies;
+						      res.status(200).send(coder);
+						    })
+						  }(username)
 				    })
 				  }(username)
 				}
